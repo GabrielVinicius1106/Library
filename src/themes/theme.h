@@ -9,11 +9,8 @@
 // Amarelo Negrito (para Avisos, Listas)
 #define HELP   "\x1b[1;93m"
 
-// Azul Negrito (para Dados, Infos)
-#define OUTPUT "\x1b[1;94m"
-
-// Cinza Negrito (para Prompts, Comandos)
-#define INPUT  "\x1b[1;90m"
+// Cinza Negrito (para InterfacesS)
+#define OUTPUT  "\x1b[1;90m"
 
 // Código para resetar a cor de volta ao padrão do terminal
 #define RESET  "\x1b[0m"
