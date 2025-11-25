@@ -1,15 +1,14 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
-
-// Permissão 0 => Usuário Comum
-// Permissão 1 => Usuário Administrador
+// permissao = 0 => Usuário Comum
+// permissao = 1 => Usuário Administrador
 
 // Estrutura Usuário
 struct Usuario {
     int id;
     char nome[32];
-    char email[32];
+    char senha[8];
     int permissao;
 };
 

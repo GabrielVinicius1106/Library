@@ -1,6 +1,12 @@
 #ifndef INTERFACES_H
 #define INTERFACES_H
 
-void interfaceInicial();
+int validarUsuario(char *nome_usuario, char *senha);
 
-#endif
+void interfaceLogin();
+
+void interfaceRealizarEmprestimo();
+
+void interfaceInicial(int codigo_permissao);
+
+#endif 
