@@ -1,6 +1,7 @@
 #ifndef THEME_H
 #define THEME_H
 
+// Verde Negrito (para Sucesso)
 #define SUCCESS "\x1b[1;32m"
 
 // Vermelho Negrito (para Erros)

@@ -65,3 +65,10 @@
     > Aplicar Filtros (categoria de livros, modelo de fone, etc.)
 
     > Realizar Emprestimos
+
+### Construção:
+
+- Para ***leitura e escrita*** no arquivo:
+    > Ler o arquivo inteiro e salvar na memória (alocação dinâmica)
+    > Realizar modificações
+    > Salvar novamente no arquivo quando necessário

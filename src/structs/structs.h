@@ -16,8 +16,8 @@ struct Usuario {
 struct Livro {
     int id;
     char nome[32];
-    char categoria[16];
     char autor[32];
+    char categoria[16];
 };
 
 // Estrutura Calculadora
