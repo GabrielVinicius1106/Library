@@ -1,0 +1,1 @@
+gcc -c main.c src/interfaces/interfaces.c

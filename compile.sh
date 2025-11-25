@@ -1,3 +1,1 @@
-gcc main.c src/interfaces/interfaces.c
-
-./a.out
+gcc -c main.c src/interfaces/interfaces.c
