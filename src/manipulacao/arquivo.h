@@ -5,8 +5,8 @@
 
 int numeroLivros(char arquivo[]);
 
-void lerLivros(char arquivo[],  struct Livro *livro);
+void lerLivros(char arquivo[],  struct Livro *livros);
 
-void salvarLivros(char arquivo[], struct Livro *livros);
+void salvarLivros(char arquivo[], struct Livro *livros, int num_livros);
 
 #endif

@@ -9,21 +9,22 @@
 
 int main(){ 
 
-    // struct Livro livros[3] = {
-    //     {1, "Teste Nome", "Teste Autor", "Teste Categoria"},
-    //     {3, "Teste Nome", "Teste Autor", "Teste Categoria"},
-    //     {4, "Teste Nome", "Teste Autor", "Teste Categoria"}
-    // };
+    struct Livro livros[3] = {
+        {1, "Teste Nome", "Teste Autor", "Teste Categoria"},
+        {3, "Teste Nome", "Teste Autor", "Teste Categoria"},
+        {4, "Teste Nome", "Teste Autor", "Teste Categoria"}
+    };
 
-    struct Livro livro = {2, "nome teste", "autor denovo", "categoriaa"};
+    // struct Livro livro = {2, "nome teste", "autor denovo", "categoriaa"};
 
     char arquivo_livros[] = "src/bd/livros.txt";
     
     struct Livro *livros_bd = malloc(sizeof(struct Livro) * 3);
-        
-    // salvarLivros(arquivo_livros, &livro);
-
+    
     int num_livros = numeroLivros(arquivo_livros);
+        
+    // salvarLivros(arquivo_livros, livros, numeroLivros(arquivo_livros));
+
 
     livros_bd = realloc(livros_bd, sizeof(struct Livro) * num_livros);
 

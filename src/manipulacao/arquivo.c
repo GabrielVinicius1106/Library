@@ -22,7 +22,7 @@ int numeroLivros(char arquivo[]){
 
 void lerLivros(char arquivo[], struct Livro *livros){
 
-    FILE *fp = fopen(arquivo, "r");
+    FILE *fp = fopen(arquivo, "r+");
 
     if(fp == NULL){
         printf(ERROR "\n ERRO: Falha ao ler arquivo! \n\n");
@@ -44,8 +44,8 @@ void lerLivros(char arquivo[], struct Livro *livros){
             num_bytes++;
         }
 
+        
         rewind(fp);
-
         for(int i = 0; i < num_livros; i++){
             
             fscanf(fp, " %d;", &id);
@@ -59,24 +59,30 @@ void lerLivros(char arquivo[], struct Livro *livros){
             strcpy((livros + i)->categoria, categoria);
         }
 
-        printf("\n Numero de Livros: %d \n", num_livros);
+        // printf("\n Numero de Livros: %d \n", num_livros);
 
-        printf("\n Numero de Bytes do Arquivo: %d bytes \n", num_bytes);
+        // printf("\n Numero de Bytes do Arquivo: %d bytes \n", num_bytes);
 
     }
 
     fclose(fp);
 }
 
-void salvarLivros(char arquivo[], struct Livro *livro){
+void salvarLivros(char arquivo[], struct Livro *livros, int num_livros){
 
-    FILE *fp = fopen(arquivo, "a+");
+    FILE *fp = fopen(arquivo, "w+");
 
     if(fp == NULL){
         printf(ERROR "\n ERRO: Falha ao ler arquivo! \n\n");
     } else {
-        fprintf(fp, "%d;%s;%s;%s;\n", livro->id, livro->nome, livro->autor, livro->categoria);
-        fflush(fp);
+
+        for(int i = 0; i < num_livros; i++){
+            fprintf(fp, "%d;%s;%s;%s;\n", (livros + i)->id, (livros + i)->nome, (livros + i)->autor, (livros + i)->categoria);
+            fflush(fp);
+        }
+
+        printf(SUCCESS "\n Livros salvos com sucesso! \n\n");
+    
     }
     
     fclose(fp);
