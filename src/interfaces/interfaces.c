@@ -93,7 +93,7 @@ void listarCalculadoras(){
         
         if(opcao == (num_calculadoras + 1)){
             break;
-        } else {
+        } else if(opcao >= 1 && opcao <= num_calculadoras) {
             emprestimoRecurso((calculadoras + opcao - 1)->id, (calculadoras + opcao - 1)->modelo);
         }
         
@@ -140,7 +140,7 @@ void listarFonesOuvido(){
         
         if(opcao == (num_fones + 1)){
             break;
-        } else {
+        } else if(opcao >= 1 && opcao <= num_fones) {
             emprestimoRecurso((fones_ouvido + opcao - 1)->id, (fones_ouvido + opcao - 1)->modelo);
         }
         
@@ -224,7 +224,7 @@ void listarEmprestimos(){
 
         printf(OUTPUT "\n\n ================================ ");
         
-        printf(SUCCESS "\n\n Pressione ENTER para retornar! \n");
+        printf(SUCCESS "\n\n Pressione ENTER para retornar! ");
         opcao = input();
         
     } while(opcao != 0);
@@ -233,7 +233,7 @@ void listarEmprestimos(){
 }
 
 void listarReservas(){
-    
+
 }
 
 void emprestimoRecurso(int id_recurso, char nome_recurso[]){
@@ -253,21 +253,73 @@ void emprestimoRecurso(int id_recurso, char nome_recurso[]){
     sprintf(novo_emprestimo.data_devolucao, "%d/%d/%d %d:%d", data_devolucao.dia, data_devolucao.mes, data_devolucao.ano, data_devolucao.hora, data_devolucao.minuto);
     novo_emprestimo.tempo_afastado = 0;
 
-    salvarEmprestimos(arquivo_emprestimos, &novo_emprestimo, 1);
+    salvarEmprestimo(arquivo_emprestimos, &novo_emprestimo);
 
-    printf(SUCCESS "\n\n Pressione ENTER para retornar ");  
+    printf(OUTPUT "\n\n Pressione ENTER para retornar ");  
     int opcao = input();
 }
 
 void reservaSala(char sala[], int max_pessoas){
+    
+    // Criação de Reserva de Sala
 
-    printf(SUCCESS "\n Sala: %s", sala);
-    printf(SUCCESS "\n Max Pessoas: %d pessoas", max_pessoas);
+    struct Data data_atual = dataAtual(); 
+    struct Reserva_Sala nova_reserva;
+
+    char arquivo_reservas[] = "src/bd/reservas.txt"; 
+    
+    // ===================================================
+    
+    int horas, minutos, dia, mes, horario_valido = 0, data_valida = 0;
+    
+    char message[64] = "";
+    
+    do {                
+        while(!data_valida){
+            system("clear");
+
+            printf(OUTPUT "\n <--- RESERVA DE SALA (%s) ---> \n", sala);
+
+            if(strcmp(message, "") != 0){
+                printf(ERROR "\n %s ", message);
+            }
+
+            data_valida = inputData(&dia, &mes, message);
+        }
+        
+        strcpy(message, "");
+
+        while(!horario_valido){
+            system("clear");
+
+            printf(OUTPUT "\n <--- RESERVA DE SALA (%s) ---> \n", sala);
+
+            if(strcmp(message, "") != 0){
+                printf(ERROR "\n %s ", message);
+            }
+
+            horario_valido = inputHorario(&horas, &minutos, message);        
+        }
+        
+    } while(!horario_valido || !data_valida);
+    
+    // Nova Reserva de Sala
+    nova_reserva.id = randomID();
+    strcpy(nova_reserva.sala, sala);
+    sprintf(nova_reserva.data_reserva, "%d/%d/%d", dia, mes, data_atual.ano);
+    sprintf(nova_reserva.horario_reserva, "%d:%d", horas, minutos);
+    nova_reserva.duracao = 30;
+    nova_reserva.qntd_pessoas = max_pessoas;
+    
+    salvarReserva(arquivo_reservas, &nova_reserva);
+    
+    printf("\n");
+
+    printf(RESET "\n Sala: %s", sala);
+    printf(RESET "\n Data: %s %s", nova_reserva.data_reserva, nova_reserva.horario_reserva);
 
     printf(SUCCESS "\n\n Pressione ENTER para retornar ");  
     int opcao = input();
-
-    printf("\n");
 };
 
 void acessarRecursos(){

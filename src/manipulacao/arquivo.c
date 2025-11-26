@@ -250,7 +250,27 @@ void salvarLivros(char arquivo[], struct Livro *livros, int num_livros){
     fclose(fp);
 }
 
-void salvarEmprestimos(char arquivo[], struct Emprestimo *emprestimo, int num_emprestimos){
+void salvarEmprestimo(char arquivo[], struct Emprestimo *emprestimo){
+
+    FILE *fp = fopen(arquivo, "a+");
+
+    if(fp == NULL){
+        printf(ERROR "\n ERRO: Falha ao ler arquivo! \n\n");
+    } else {
+
+        fprintf(fp, "%d;%d;%s;%s;%d;\n", emprestimo->id, emprestimo->id_recurso, emprestimo->nome_recurso, emprestimo->data_devolucao, emprestimo->tempo_afastado);
+        fflush(fp);
+
+        system("clear");
+
+        printf(SUCCESS "\n %s salvo com sucesso! ", emprestimo->nome_recurso);
+    
+    }
+    
+    fclose(fp);
+}
+
+void salvarReserva(char arquivo[], struct Reserva_Sala *sala){
     
     FILE *fp = fopen(arquivo, "a+");
 
@@ -258,12 +278,12 @@ void salvarEmprestimos(char arquivo[], struct Emprestimo *emprestimo, int num_em
         printf(ERROR "\n ERRO: Falha ao ler arquivo! \n\n");
     } else {
 
-        fprintf(fp, "%d;%d;%s;%s;%d\n", emprestimo->id, emprestimo->id_recurso, emprestimo->nome_recurso, emprestimo->data_devolucao, emprestimo->tempo_afastado);
+        fprintf(fp, "%d;%s;%s;%s;%d;%d;\n", sala->id, sala->sala, sala->data_reserva, sala->horario_reserva, sala->duracao, sala->qntd_pessoas);
         fflush(fp);
 
         system("clear");
 
-        printf(SUCCESS "\n %s salvo com sucesso! \n", emprestimo->nome_recurso);
+        printf(SUCCESS "\n Sala %s reservada com sucesso! ", sala->sala);
     
     }
     

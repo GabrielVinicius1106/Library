@@ -17,6 +17,8 @@ void lerEmprestimos(char arquivo[], struct Emprestimo *emprestimos);
 
 void salvarLivros(char arquivo[], struct Livro *livros, int num_livros);
 
-void salvarEmprestimos(char arquivo[], struct Emprestimo *emprestimo, int num_emprestimos);
+void salvarEmprestimo(char arquivo[], struct Emprestimo *emprestimo);
+
+void salvarReserva(char arquivo[], struct Reserva_Sala *sala);
 
 #endif
