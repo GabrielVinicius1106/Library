@@ -3,10 +3,12 @@
 #include <stdlib.h>
 
 #include "interfaces.h"
+#include "../datas/datas.h"
 #include "../manipulacao/arquivo.h"
 #include "../structs/structs.h"
-#include "../utils/utils.h"
 #include "../themes/theme.h"
+#include "../utils/utils.h"
+#include "../input/input.h"
 
 void listarLivros(){
 
@@ -40,13 +42,13 @@ void listarLivros(){
         printf(SUCCESS "\n\n Digite %d para sair! \n", (num_livros + 1));
 
         printf(HELP "\n Insira o livro desejado >> ");
-        scanf("%d", &opcao);
+        opcao = input();
     
         
         if(opcao == (num_livros + 1)){
             break;
-        } else {
-            emprestimoLivro((livros + opcao - 1));
+        } else if(opcao >= 1 && opcao <= num_livros){
+            emprestimoRecurso((livros + opcao - 1)->id, (livros + opcao - 1)->nome);
         }
         
     } while(opcao < 1 || opcao > num_livros);
@@ -86,11 +88,13 @@ void listarCalculadoras(){
         printf(SUCCESS "\n\n Digite %d para sair! \n", (num_calculadoras + 1));
 
         printf(HELP "\n Insira a calculadora desejada >> ");
-        scanf("%d", &opcao);
+        opcao = input();
     
         
         if(opcao == (num_calculadoras + 1)){
             break;
+        } else {
+            emprestimoRecurso((calculadoras + opcao - 1)->id, (calculadoras + opcao - 1)->modelo);
         }
         
     } while(opcao < 1 || opcao > num_calculadoras);
@@ -131,11 +135,13 @@ void listarFonesOuvido(){
         printf(SUCCESS "\n\n Digite %d para sair! \n", (num_fones + 1));
 
         printf(HELP "\n Insira o fone de ouvido desejado >> ");
-        scanf("%d", &opcao);
+        opcao = input();
     
         
         if(opcao == (num_fones + 1)){
             break;
+        } else {
+            emprestimoRecurso((fones_ouvido + opcao - 1)->id, (fones_ouvido + opcao - 1)->modelo);
         }
         
     } while(opcao < 1 || opcao > num_fones);
@@ -175,11 +181,13 @@ void listarSalas(){
         printf(SUCCESS "\n\n Digite %d para sair! \n", (num_salas + 1));
 
         printf(HELP "\n Insira a sala desejada >> ");
-        scanf("%d", &opcao);
+        opcao = input();
     
         
         if(opcao == (num_salas + 1)){
             break;
+        } else if(opcao >= 1 && opcao <= num_salas){
+            reservaSala((salas + opcao - 1)->sala, (salas + opcao - 1)->max_pessoas);
         }
         
     } while(opcao < 1 || opcao > num_salas);
@@ -187,31 +195,84 @@ void listarSalas(){
     free(salas);
 }
 
-void emprestimoLivro(struct Livro *livro){
-    // Criação de um Empréstimo
+void listarEmprestimos(){
+    
+    int opcao = -1;
+    
+    char arquivo_emprestimos[] = "src/bd/emprestimos.txt";
+    
+    int num_emprestimos = numeroRecursos(arquivo_emprestimos);
+    
+    struct Emprestimo *emprestimos = malloc(sizeof(struct Emprestimo) * num_emprestimos);
 
-    struct Emprestimo novo_emprestimo;
+    lerEmprestimos(arquivo_emprestimos, emprestimos);
 
-    novo_emprestimo.id = randomID();
-    novo_emprestimo.id_recurso = livro->id;
-    strcpy(novo_emprestimo.nome_recurso, livro->nome);
-    novo_emprestimo.tempo_afastado = 0; 
+    // ===================================================
 
-    printf(OUTPUT "\n - NOVO EMPRÉSTIMO - \n");
+    do {
+        system("clear");
+    
+        printf(OUTPUT "\n <--- EMPRÉSTIMOS REALIZADOS ---> \n");
+        
+        if(!num_emprestimos){
+            printf(ERROR "\n Não há empréstimos realizados!");
+        } else {
+            for(int i = 0; i < num_emprestimos; i++){
+                printf(OUTPUT "\n (%d) %d   %s  %s", (i + 1), (emprestimos + i)->id, (emprestimos + i)->nome_recurso, (emprestimos + i)->data_devolucao);
+            }
+        }
 
-    printf("\n ID Empréstimo: %d", novo_emprestimo.id);
-    printf("\n ID Recurso: %d", novo_emprestimo.id_recurso);
-    printf("\n Nome do Recurso: %s", novo_emprestimo.nome_recurso);
-    printf("\n Tempo Afastado: %d", novo_emprestimo.tempo_afastado);
-
-    int c;
-    printf(SUCCESS "\n\n Pressione ENTER para retornar ");
-    scanf(" %d", &c);
+        printf(OUTPUT "\n\n ================================ ");
+        
+        printf(SUCCESS "\n\n Pressione ENTER para retornar! \n");
+        opcao = input();
+        
+    } while(opcao != 0);
+    
+    free(emprestimos);
 }
 
-void realizarEmprestimo(){
+void listarReservas(){
     
-    int opcao = 0;
+}
+
+void emprestimoRecurso(int id_recurso, char nome_recurso[]){
+    // Criação de um Empréstimo
+    
+    struct Emprestimo novo_emprestimo;
+    struct Data data_devolucao;
+
+    char arquivo_emprestimos[] = "src/bd/emprestimos.txt"; 
+    
+    data_devolucao = dataDevolucao();
+
+    // Novo Empréstimo
+    novo_emprestimo.id = randomID();
+    novo_emprestimo.id_recurso = id_recurso;
+    strcpy(novo_emprestimo.nome_recurso, nome_recurso);
+    sprintf(novo_emprestimo.data_devolucao, "%d/%d/%d %d:%d", data_devolucao.dia, data_devolucao.mes, data_devolucao.ano, data_devolucao.hora, data_devolucao.minuto);
+    novo_emprestimo.tempo_afastado = 0;
+
+    salvarEmprestimos(arquivo_emprestimos, &novo_emprestimo, 1);
+
+    printf(SUCCESS "\n\n Pressione ENTER para retornar ");  
+    int opcao = input();
+}
+
+void reservaSala(char sala[], int max_pessoas){
+
+    printf(SUCCESS "\n Sala: %s", sala);
+    printf(SUCCESS "\n Max Pessoas: %d pessoas", max_pessoas);
+
+    printf(SUCCESS "\n\n Pressione ENTER para retornar ");  
+    int opcao = input();
+
+    printf("\n");
+};
+
+void acessarRecursos(){
+    
+    int opcao = -1;
     char message[32] = "";
 
     do {
@@ -233,12 +294,16 @@ void realizarEmprestimo(){
         printf("\n 3 - FONES DE OUVIDO");
         printf("\n 4 - RESERVAR SALA");
         printf("\n");
-        printf("\n 5 - SAIR");
+        printf("\n 0 - RETORNAR");
     
         printf(HELP "\n\n Insira uma opção > ");
-        scanf("%d", &opcao);
+        opcao = input();
 
         switch (opcao){
+            case 0:
+                strcpy(message, "");
+                break;
+
             case 1:
                 strcpy(message, "");
                 listarLivros();
@@ -268,34 +333,12 @@ void realizarEmprestimo(){
                 break;
         }
     
-    } while(opcao != 5);
-}
-
-void listarEmprestimos(){
-    int opcao = 0;
-
-    struct Emprestimos *emprestimos = NULL;
-
-    do {
-        system("clear");
-
-        printf(OUTPUT);
-    
-        printf("<--- EMPRÉSTIMOS REALIZADOS ---> \n");
-        
-        if(!emprestimos){
-            printf(ERROR "\n Não há empréstimos realizados! \n");
-        }
-
-        printf(HELP "\n Digite 6 para RETORNAR > ");
-        scanf("%d", &opcao);
-    
-    } while(opcao != 6);
+    } while(opcao != 0);
 }
 
 void interfaceInicial(){
 
-    int opcao = 0;
+    int opcao = -1;
     char message[32] = "";
 
     do {
@@ -313,23 +356,35 @@ void interfaceInicial(){
         printf(OUTPUT);
 
         printf("\n 1 - ACESSAR RECURSOS");
-        printf("\n 2 - LISTAR EMPRÉSTIMOS / RESERVAS");
-        printf("\n 3 - SAIR");
-    
+        printf("\n 2 - LISTAR EMPRÉSTIMOS");
+        printf("\n 3 - LISTAR RESERVAS");
+        printf("\n");
+        printf("\n 0 - SAIR");
+        
         printf(HELP "\n\n Insira uma opção >> ");
-        scanf("%d", &opcao);
+        opcao = input();
 
         switch (opcao){
+
+            case 0: 
+                strcpy(message, "");
+                break;
         
             case 1:
                 strcpy(message, "");
-                realizarEmprestimo();
+                acessarRecursos();
 
                 break;
             
             case 2:
                 strcpy(message, "");
                 listarEmprestimos();
+
+                break;
+
+            case 3:
+                strcpy(message, "");
+                listarReservas();
 
                 break;
         
@@ -339,9 +394,11 @@ void interfaceInicial(){
         
         }
 
-    } while(opcao != 3);
+    } while(opcao != 0);
 
     system("clear");
+
+    printf(SUCCESS "\n Obrigado por utilizar! \n\n\n");
 
     printf(RESET);
 

@@ -181,6 +181,52 @@ void lerSalas(char arquivo[], struct Sala *salas){
     fclose(fp);
 }
 
+void lerEmprestimos(char arquivo[], struct Emprestimo *emprestimos){
+    FILE *fp = fopen(arquivo, "r+");
+
+    if(fp == NULL){
+        printf(ERROR "\n ERRO: Falha ao ler arquivo! \n\n");
+    } else {
+
+        int num_emprestimos = numeroRecursos(arquivo);
+
+        int id_emprestimo;
+        int id_recurso;
+        char nome_recurso[32];
+
+        char data_devolucao[24];
+        int tempo_afastado;
+        
+        int num_bytes = 0;
+        
+        char c;
+
+        rewind(fp);
+        while((c = getc(fp)) != EOF){
+            num_bytes++;
+        }
+
+        
+        rewind(fp);
+        for(int i = 0; i < num_emprestimos; i++){
+            
+            fscanf(fp, " %d;", &id_emprestimo);
+            fscanf(fp, " %d;", &id_recurso);
+            fscanf(fp, " %[^;];", nome_recurso);
+            fscanf(fp, " %[^;];", data_devolucao);
+            fscanf(fp, " %d;", &tempo_afastado);
+
+            (emprestimos + i)->id = id_emprestimo; 
+            (emprestimos + i)->id_recurso = id_recurso; 
+            strcpy((emprestimos + i)->nome_recurso, nome_recurso);
+            strcpy((emprestimos + i)->data_devolucao, data_devolucao);
+            (emprestimos + i)->tempo_afastado = tempo_afastado;
+        }
+    }
+
+    fclose(fp);
+}
+
 // salvarLivros(<diretorio_arquivo>, <ponteiro_de_struct>, <numero_structs>)
 void salvarLivros(char arquivo[], struct Livro *livros, int num_livros){
 
@@ -195,7 +241,29 @@ void salvarLivros(char arquivo[], struct Livro *livros, int num_livros){
             fflush(fp);
         }
 
-        printf(SUCCESS "\n Livros salvos com sucesso! \n\n");
+        system("clear");
+
+        printf(SUCCESS "\n Livros salvos com sucesso! \n");
+    
+    }
+    
+    fclose(fp);
+}
+
+void salvarEmprestimos(char arquivo[], struct Emprestimo *emprestimo, int num_emprestimos){
+    
+    FILE *fp = fopen(arquivo, "a+");
+
+    if(fp == NULL){
+        printf(ERROR "\n ERRO: Falha ao ler arquivo! \n\n");
+    } else {
+
+        fprintf(fp, "%d;%d;%s;%s;%d\n", emprestimo->id, emprestimo->id_recurso, emprestimo->nome_recurso, emprestimo->data_devolucao, emprestimo->tempo_afastado);
+        fflush(fp);
+
+        system("clear");
+
+        printf(SUCCESS "\n %s salvo com sucesso! \n", emprestimo->nome_recurso);
     
     }
     

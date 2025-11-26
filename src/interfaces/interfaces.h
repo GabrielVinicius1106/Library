@@ -14,11 +14,15 @@ void listarSalas();
 
 // ===================================================
 
-void emprestimoLivro(struct Livro *livro);
+void emprestimoRecurso(int id_recurso, char nome_recurso[]);
 
-void realizarEmprestimo();
+void reservaSala(char sala[], int max_pessoas);
+
+void acessarRecursos();
 
 void listarEmprestimos();
+
+void listarReservas();
 
 void interfaceInicial();
 

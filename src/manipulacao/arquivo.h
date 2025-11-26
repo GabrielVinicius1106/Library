@@ -13,6 +13,10 @@ void lerFonesOuvido(char arquivo[],  struct Fone_Ouvido *fones_ouvido);
 
 void lerSalas(char arquivo[], struct Sala *salas);
 
+void lerEmprestimos(char arquivo[], struct Emprestimo *emprestimos);
+
 void salvarLivros(char arquivo[], struct Livro *livros, int num_livros);
+
+void salvarEmprestimos(char arquivo[], struct Emprestimo *emprestimo, int num_emprestimos);
 
 #endif
