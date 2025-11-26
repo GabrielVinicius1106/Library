@@ -36,7 +36,7 @@ struct Emprestimo {
     char nome_recurso[32];
 
     char data_devolucao[32];
-    int tempo_afastado;
+    int concluido;
 };
 
 // Estrutura de Reserva de Sala
@@ -47,6 +47,7 @@ struct Reserva_Sala {
     char horario_reserva[16];
     int duracao;
     int qntd_pessoas;
+    int concluido;
 };
 
 // Estrutura de Data

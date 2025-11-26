@@ -15,6 +15,8 @@ void lerSalas(char arquivo[], struct Sala *salas);
 
 void lerEmprestimos(char arquivo[], struct Emprestimo *emprestimos);
 
+void lerReservas(char arquivo[], struct Reserva_Sala *reservas);
+
 void salvarLivros(char arquivo[], struct Livro *livros, int num_livros);
 
 void salvarEmprestimo(char arquivo[], struct Emprestimo *emprestimo);

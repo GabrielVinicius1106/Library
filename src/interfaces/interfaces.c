@@ -218,7 +218,7 @@ void listarEmprestimos(){
             printf(ERROR "\n Não há empréstimos realizados!");
         } else {
             for(int i = 0; i < num_emprestimos; i++){
-                printf(OUTPUT "\n (%d) %d   %s  %s", (i + 1), (emprestimos + i)->id, (emprestimos + i)->nome_recurso, (emprestimos + i)->data_devolucao);
+                printf(OUTPUT "\n (%d) %d   %-16s  %-24s", (i + 1), (emprestimos + i)->id, (emprestimos + i)->nome_recurso, (emprestimos + i)->data_devolucao);
             }
         }
 
@@ -234,6 +234,48 @@ void listarEmprestimos(){
 
 void listarReservas(){
 
+    int opcao = -1;
+    
+    char arquivo_reservas[] = "src/bd/reservas.txt";
+    
+    int num_reservas = numeroRecursos(arquivo_reservas);
+    
+    struct Reserva_Sala *reservas = malloc(sizeof(struct Reserva_Sala) * num_reservas);
+
+    lerReservas(arquivo_reservas, reservas);
+
+    // ===================================================
+
+    do {
+        system("clear");
+    
+        printf(OUTPUT "\n <--- RESERVAS REALIZADAS ---> \n");
+        
+        if(!num_reservas){
+            printf(ERROR "\n Não há reservas realizadas!");
+        } else {
+            for(int i = 0; i < num_reservas; i++){
+
+                int concluido = (reservas + i)->concluido;
+
+                if(concluido){
+                    printf(SUCCESS);
+                } else {
+                    printf(OUTPUT);
+                }
+                
+                printf("\n (%d) %s  ( %-10s  %-5s)", (i + 1), (reservas + i)->sala, (reservas + i)->data_reserva, (reservas + i)->horario_reserva);
+            }
+        }
+
+        printf(OUTPUT "\n\n ================================ ");
+        
+        printf(SUCCESS "\n\n Pressione ENTER para retornar! ");
+        opcao = input();
+        
+    } while(opcao != 0);
+    
+    free(reservas);
 }
 
 void emprestimoRecurso(int id_recurso, char nome_recurso[]){
@@ -251,7 +293,7 @@ void emprestimoRecurso(int id_recurso, char nome_recurso[]){
     novo_emprestimo.id_recurso = id_recurso;
     strcpy(novo_emprestimo.nome_recurso, nome_recurso);
     sprintf(novo_emprestimo.data_devolucao, "%d/%d/%d %d:%d", data_devolucao.dia, data_devolucao.mes, data_devolucao.ano, data_devolucao.hora, data_devolucao.minuto);
-    novo_emprestimo.tempo_afastado = 0;
+    novo_emprestimo.concluido = 0;
 
     salvarEmprestimo(arquivo_emprestimos, &novo_emprestimo);
 
