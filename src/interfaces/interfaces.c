@@ -218,7 +218,16 @@ void listarEmprestimos(){
             printf(ERROR "\n Não há empréstimos realizados!");
         } else {
             for(int i = 0; i < num_emprestimos; i++){
-                printf(OUTPUT "\n (%d) %d   %-16s  %-24s", (i + 1), (emprestimos + i)->id, (emprestimos + i)->nome_recurso, (emprestimos + i)->data_devolucao);
+
+                int concluido = (emprestimos + i)->concluido;
+
+                if(concluido){
+                    printf(SUCCESS);
+                } else {
+                    printf(OUTPUT);
+                }
+
+                printf("\n (%d) %d   %-16s  %-24s", (i + 1), (emprestimos + i)->id, (emprestimos + i)->nome_recurso, (emprestimos + i)->data_devolucao);
             }
         }
 
