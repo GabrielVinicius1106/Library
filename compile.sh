@@ -1,1 +1,1 @@
-gcc -c main.c src/interfaces/interfaces.c
+gcc -c main.c src/interfaces/interfaces.c src/manipulacao/arquivo.c
