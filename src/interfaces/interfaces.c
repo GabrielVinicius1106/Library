@@ -5,6 +5,7 @@
 #include "interfaces.h"
 #include "../manipulacao/arquivo.h"
 #include "../structs/structs.h"
+#include "../utils/utils.h"
 #include "../themes/theme.h"
 
 void listarLivros(){
@@ -27,7 +28,7 @@ void listarLivros(){
         printf(OUTPUT "\n <--- LIVROS DISPONÍVEIS ---> \n");
     
         if(!num_livros){
-            printf(ERROR "\n Não salas disponíveis!");
+            printf(ERROR "\n Não há livros disponíveis!");
         } else {
             for(int i = 0; i < num_livros; i++){
                 printf(OUTPUT "\n (%d) %s", (i + 1), (livros + i)->nome);
@@ -44,6 +45,8 @@ void listarLivros(){
         
         if(opcao == (num_livros + 1)){
             break;
+        } else {
+            emprestimoLivro((livros + opcao - 1));
         }
         
     } while(opcao < 1 || opcao > num_livros);
@@ -71,7 +74,7 @@ void listarCalculadoras(){
         printf(OUTPUT "\n <--- CALCULADORAS DISPONÍVEIS ---> \n");
         
         if(!num_calculadoras){
-            printf(ERROR "\n Não calculadoras disponíveis!");
+            printf(ERROR "\n Não há calculadoras disponíveis!");
         } else {
             for(int i = 0; i < num_calculadoras; i++){
                 printf(OUTPUT "\n (%d) %s", (i + 1), (calculadoras + i)->modelo);
@@ -182,6 +185,28 @@ void listarSalas(){
     } while(opcao < 1 || opcao > num_salas);
     
     free(salas);
+}
+
+void emprestimoLivro(struct Livro *livro){
+    // Criação de um Empréstimo
+
+    struct Emprestimo novo_emprestimo;
+
+    novo_emprestimo.id = randomID();
+    novo_emprestimo.id_recurso = livro->id;
+    strcpy(novo_emprestimo.nome_recurso, livro->nome);
+    novo_emprestimo.tempo_afastado = 0; 
+
+    printf(OUTPUT "\n - NOVO EMPRÉSTIMO - \n");
+
+    printf("\n ID Empréstimo: %d", novo_emprestimo.id);
+    printf("\n ID Recurso: %d", novo_emprestimo.id_recurso);
+    printf("\n Nome do Recurso: %s", novo_emprestimo.nome_recurso);
+    printf("\n Tempo Afastado: %d", novo_emprestimo.tempo_afastado);
+
+    int c;
+    printf(SUCCESS "\n\n Pressione ENTER para retornar ");
+    scanf(" %d", &c);
 }
 
 void realizarEmprestimo(){
