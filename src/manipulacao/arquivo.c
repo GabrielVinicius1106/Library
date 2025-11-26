@@ -6,6 +6,7 @@
 #include "arquivo.h"
 
 // Retorna o número de recursos de um arquivo
+// numeroRecursos(<diretorio_arquivo>)
 int numeroRecursos(char arquivo[]){
     
     FILE *fp = fopen(arquivo, "r");
@@ -106,6 +107,7 @@ void lerCalculadoras(char arquivo[], struct Calculadora *calculadoras){
     fclose(fp);
 }   
 
+// lerFonesOuvido(<diretorio_arquivo>, <ponteiro_de_struct>)
 void lerFonesOuvido(char arquivo[], struct Fone_Ouvido *fones_ouvido){
     FILE *fp = fopen(arquivo, "r+");
 
@@ -145,6 +147,7 @@ void lerFonesOuvido(char arquivo[], struct Fone_Ouvido *fones_ouvido){
     fclose(fp);
 }
 
+// lerSalas(<diretorio_arquivo>, <ponteiro_de_struct>)
 void lerSalas(char arquivo[], struct Sala *salas){
     FILE *fp = fopen(arquivo, "r+");
 
@@ -181,6 +184,7 @@ void lerSalas(char arquivo[], struct Sala *salas){
     fclose(fp);
 }
 
+// lerEmprestimos(<diretorio_arquivo>, <ponteiro_de_struct>)
 void lerEmprestimos(char arquivo[], struct Emprestimo *emprestimos){
     
     FILE *fp = fopen(arquivo, "r+");
@@ -228,6 +232,7 @@ void lerEmprestimos(char arquivo[], struct Emprestimo *emprestimos){
     fclose(fp);
 }
 
+// lerReservas(<diretorio_arquivo>, <ponteiro_de_struct>)
 void lerReservas(char arquivo[], struct Reserva_Sala *reservas){
     
     FILE *fp = fopen(arquivo, "r+");
@@ -303,6 +308,7 @@ void salvarLivros(char arquivo[], struct Livro *livros, int num_livros){
     fclose(fp);
 }
 
+// salvarEmprestimo(<diretorio_arquivo>, <ponteiro_de_struct>)
 void salvarEmprestimo(char arquivo[], struct Emprestimo *emprestimo){
 
     FILE *fp = fopen(arquivo, "a+");
@@ -323,6 +329,7 @@ void salvarEmprestimo(char arquivo[], struct Emprestimo *emprestimo){
     fclose(fp);
 }
 
+// salvarReserva(<diretorio_arquivo>, <ponteiro_de_struct>)
 void salvarReserva(char arquivo[], struct Reserva_Sala *sala){
     
     FILE *fp = fopen(arquivo, "a+");
