@@ -1,12 +1,20 @@
 #ifndef INTERFACES_H
 #define INTERFACES_H
 
-int validarUsuario(char *nome_usuario, char *senha);
+void listarLivros();
 
-void interfaceLogin();
+void listarCalculadoras();
 
-void interfaceRealizarEmprestimo();
+void listarFonesOuvido();
 
-void interfaceInicial(int codigo_permissao);
+void listarSalas();
+
+// ========================
+
+void realizarEmprestimo();
+
+void listarEmprestimos();
+
+void interfaceInicial();
 
 #endif 

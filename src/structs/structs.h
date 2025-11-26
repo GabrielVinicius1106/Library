@@ -1,17 +1,6 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
-// permissao = 0 => Usuário Comum
-// permissao = 1 => Usuário Administrador
-
-// Estrutura Usuário
-struct Usuario {
-    int id;
-    char nome[32];
-    char senha[8];
-    int permissao;
-};
-
 // Estrutura Livro
 struct Livro {
     int id;
@@ -27,18 +16,17 @@ struct Calculadora {
     char marca[8];
 };
 
-// Estrutura Tablet
-struct Tablet {
-    int id;
-    char modelo[8];
-    char marca[8];
-};
-
 // Estrutura Fone de Ouvido
 struct Fone_Ouvido {
     int id;
-    char modelo[8];
-    char marca[8];
+    char modelo[16];
+    char marca[16];
+};
+
+// Estrutura Sala de Estudos
+struct Sala {
+    char sala[4];
+    int max_pessoas;
 };
 
 // Estrutura de Empréstimo
@@ -47,11 +35,19 @@ struct Emprestimo {
     int id_recurso;
     char nome_recurso[32];
 
-    int id_usuario;
-    char nome_usuario[32];
-
     char data_devolucao[8];
-    float valor_multa;
+    int tempo_afastado;
 };
+
+// Estrutura de Reserva de Sala
+struct Reserva_Sala {
+    int id;
+    int id_sala;
+    char data_reserva[8];
+    char horario_reserva[5];
+    float duracao;
+    int qntd_pessoas;
+};
+
 
 #endif

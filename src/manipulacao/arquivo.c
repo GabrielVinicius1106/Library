@@ -5,21 +5,24 @@
 #include "../themes/theme.h"
 #include "arquivo.h"
 
-int numeroLivros(char arquivo[]){
+// Retorna o número de recursos de um arquivo
+int numeroRecursos(char arquivo[]){
+    
     FILE *fp = fopen(arquivo, "r");
 
-    int num_livros = 0;
+    int qntd = 0;
     char c;
 
     while((c = getc(fp)) != EOF){
         if(c == '\n'){
-            num_livros++;
+            qntd++;
         }
     }
 
-    return num_livros;
+    return qntd;
 }
 
+// lerLivros(<diretorio_arquivo>, <ponteiro_de_struct>)
 void lerLivros(char arquivo[], struct Livro *livros){
 
     FILE *fp = fopen(arquivo, "r+");
@@ -28,7 +31,7 @@ void lerLivros(char arquivo[], struct Livro *livros){
         printf(ERROR "\n ERRO: Falha ao ler arquivo! \n\n");
     } else {
 
-        int num_livros = numeroLivros(arquivo);
+        int num_livros = numeroRecursos(arquivo);
 
         int id;
         char nome[32];
@@ -58,19 +61,130 @@ void lerLivros(char arquivo[], struct Livro *livros){
             strcpy((livros + i)->autor, autor);
             strcpy((livros + i)->categoria, categoria);
         }
-
-        // printf("\n Numero de Livros: %d \n", num_livros);
-
-        // printf("\n Numero de Bytes do Arquivo: %d bytes \n", num_bytes);
-
     }
 
     fclose(fp);
 }
 
+// lerCalculadoras(<diretorio_arquivo>, <ponteiro_de_struct>)
+void lerCalculadoras(char arquivo[], struct Calculadora *calculadoras){
+    FILE *fp = fopen(arquivo, "r+");
+
+    if(fp == NULL){
+        printf(ERROR "\n ERRO: Falha ao ler arquivo! \n\n");
+    } else {
+
+        int num_calculadoras = numeroRecursos(arquivo);
+
+        int id;
+        char modelo[8];
+        char marca[8];
+        
+        int num_bytes = 0;
+        
+        char c;
+
+        rewind(fp);
+        while((c = getc(fp)) != EOF){
+            num_bytes++;
+        }
+
+        
+        rewind(fp);
+        for(int i = 0; i < num_calculadoras; i++){
+            
+            fscanf(fp, " %d;", &id);
+            fscanf(fp, " %[^;];", modelo);
+            fscanf(fp, " %[^;];", marca);
+
+            (calculadoras + i)->id = id;
+            strcpy((calculadoras + i)->modelo, modelo);
+            strcpy((calculadoras + i)->marca, marca);
+        }
+    }
+
+    fclose(fp);
+}   
+
+void lerFonesOuvido(char arquivo[], struct Fone_Ouvido *fones_ouvido){
+    FILE *fp = fopen(arquivo, "r+");
+
+    if(fp == NULL){
+        printf(ERROR "\n ERRO: Falha ao ler arquivo! \n\n");
+    } else {
+
+        int num_fones = numeroRecursos(arquivo);
+
+        int id;
+        char modelo[16];
+        char marca[16];
+        
+        int num_bytes = 0;
+        
+        char c;
+
+        rewind(fp);
+        while((c = getc(fp)) != EOF){
+            num_bytes++;
+        }
+
+        
+        rewind(fp);
+        for(int i = 0; i < num_fones; i++){
+            
+            fscanf(fp, " %d;", &id);
+            fscanf(fp, " %[^;];", modelo);
+            fscanf(fp, " %[^;];", marca);
+
+            (fones_ouvido + i)->id = id;
+            strcpy((fones_ouvido + i)->modelo, modelo);
+            strcpy((fones_ouvido + i)->marca, marca);
+        }
+    }
+
+    fclose(fp);
+}
+
+void lerSalas(char arquivo[], struct Sala *salas){
+    FILE *fp = fopen(arquivo, "r+");
+
+    if(fp == NULL){
+        printf(ERROR "\n ERRO: Falha ao ler arquivo! \n\n");
+    } else {
+
+        int num_salas = numeroRecursos(arquivo);
+
+        char sala[4];
+        int max_pessoas;
+        
+        int num_bytes = 0;
+        
+        char c;
+
+        rewind(fp);
+        while((c = getc(fp)) != EOF){
+            num_bytes++;
+        }
+
+        
+        rewind(fp);
+        for(int i = 0; i < num_salas; i++){
+            
+            fscanf(fp, " %[^;];", sala);
+            fscanf(fp, " %d;", &max_pessoas);
+
+            strcpy((salas + i)->sala, sala);
+            (salas + i)->max_pessoas = max_pessoas;
+        }
+    }
+
+    fclose(fp);
+}
+
+// salvarLivros(<diretorio_arquivo>, <ponteiro_de_struct>, <numero_structs>)
 void salvarLivros(char arquivo[], struct Livro *livros, int num_livros){
 
-    FILE *fp = fopen(arquivo, "w+");
+    FILE *fp = fopen(arquivo, "r+");
 
     if(fp == NULL){
         printf(ERROR "\n ERRO: Falha ao ler arquivo! \n\n");
