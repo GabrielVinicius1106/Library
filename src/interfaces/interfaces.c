@@ -422,6 +422,8 @@ void listarSalas(){
     free(salas);
 }
 
+// ============================================================
+
 void listarEmprestimos(){
     
     int opcao = -1;

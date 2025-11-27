@@ -11,17 +11,17 @@ void listarFonesOuvido();
 
 void listarSalas();
 
-// ===================================================
+// ============================================================
 
-void acessarRecursos();
+void listarEmprestimos();
+
+void listarReservas();
 
 void emprestimoRecurso(int id_recurso, char nome_recurso[], char tipo_recurso[]);
 
 void reservaSala(int id_sala, char sala[], int max_pessoas);
 
-void listarEmprestimos();
-
-void listarReservas();
+void acessarRecursos();
 
 void interfaceInicial();
 
