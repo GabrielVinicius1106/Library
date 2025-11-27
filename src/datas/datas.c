@@ -30,6 +30,7 @@ struct Data dataAtual(){
 
 struct Data dataDevolucao(){
     // Cada empréstimo terá uma duração de 7 dias
+    // LIMITAÇÃO: Todos os meses possuem 31 DIAS
 
     struct Data data_devolucao = dataAtual();
 

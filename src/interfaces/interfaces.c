@@ -528,7 +528,7 @@ void emprestimoRecurso(int id_recurso, char nome_recurso[], char tipo_recurso[])
     novo_emprestimo.id = randomID();
     novo_emprestimo.id_recurso = id_recurso;
     strcpy(novo_emprestimo.nome_recurso, nome_recurso);
-    sprintf(novo_emprestimo.data_devolucao, "%d/%d/%d %d:%d", data_devolucao.dia, data_devolucao.mes, data_devolucao.ano, data_devolucao.hora, data_devolucao.minuto);
+    sprintf(novo_emprestimo.data_devolucao, "%02d/%02d/%02d %02d:%02d", data_devolucao.dia, data_devolucao.mes, data_devolucao.ano, data_devolucao.hora, data_devolucao.minuto);
     novo_emprestimo.concluido = 0;
 
     // Lógica para Alterar Disponibilidade de Recurso
@@ -685,8 +685,8 @@ void reservaSala(int id_sala, char sala[], int max_pessoas){
     // Nova Reserva de Sala
     nova_reserva.id = randomID();
     strcpy(nova_reserva.sala, sala);
-    sprintf(nova_reserva.data_reserva, "%d/%d/%d", dia, mes, data_atual.ano);
-    sprintf(nova_reserva.horario_reserva, "%d:%d", horas, minutos);
+    sprintf(nova_reserva.data_reserva, "%02d/%02d/%02d", dia, mes, data_atual.ano);
+    sprintf(nova_reserva.horario_reserva, "%02d:%02d", horas, minutos);
     nova_reserva.duracao = duracao;
     nova_reserva.qntd_pessoas = qntd_pessoas;
     nova_reserva.concluido = 0;
