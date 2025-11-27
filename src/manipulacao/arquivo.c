@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "../input/input.h"
 #include "../themes/theme.h"
 #include "arquivo.h"
 
@@ -173,6 +174,7 @@ void lerEmprestimos(char arquivo[], struct Emprestimo *emprestimos){
         int id_emprestimo;
         int id_recurso;
         char nome_recurso[32];
+        char tipo_recurso[12];
 
         char data_devolucao[24];
         int concluido;
@@ -182,12 +184,14 @@ void lerEmprestimos(char arquivo[], struct Emprestimo *emprestimos){
             
             fscanf(fp, " %d;", &id_emprestimo);
             fscanf(fp, " %d;", &id_recurso);
+            fscanf(fp, " %[^;];", tipo_recurso);
             fscanf(fp, " %[^;];", nome_recurso);
             fscanf(fp, " %[^;];", data_devolucao);
             fscanf(fp, " %d;\n", &concluido);
 
             (emprestimos + i)->id = id_emprestimo; 
             (emprestimos + i)->id_recurso = id_recurso; 
+            strcpy((emprestimos + i)->tipo_recurso, tipo_recurso);
             strcpy((emprestimos + i)->nome_recurso, nome_recurso);
             strcpy((emprestimos + i)->data_devolucao, data_devolucao);
             (emprestimos + i)->concluido = concluido;
@@ -330,10 +334,7 @@ void salvarSalas(char arquivo[], struct Sala *salas, int num_salas){
             fflush(fp);
         }
 
-        system("clear");
-
-        printf(SUCCESS "\n Salas salvas com sucesso! \n");
-    
+        system("clear");    
     }
     
     fclose(fp);
@@ -348,7 +349,7 @@ void salvarEmprestimo(char arquivo[], struct Emprestimo *emprestimo){
         printf(ERROR "\n ERRO: Falha ao ler arquivo! \n\n");
     } else {
 
-        fprintf(fp, "%03d;%02d;%s;%s;%d;\n", emprestimo->id, emprestimo->id_recurso, emprestimo->nome_recurso, emprestimo->data_devolucao, emprestimo->concluido);
+        fprintf(fp, "%03d;%02d;%s;%s;%s;%d;\n", emprestimo->id, emprestimo->id_recurso, emprestimo->tipo_recurso, emprestimo->nome_recurso, emprestimo->data_devolucao, emprestimo->concluido);
         fflush(fp);
 
         system("clear");
@@ -358,6 +359,89 @@ void salvarEmprestimo(char arquivo[], struct Emprestimo *emprestimo){
     }
     
     fclose(fp);
+}
+
+// concluirEmprestimo(<tipo_recurso>, <id_recurso>)
+void concluirEmprestimo(char tipo_recurso[], int id_recurso){
+
+    if(strcmp(tipo_recurso, "livro") == 0){
+
+        char arquivo[] = "src/bd/livros.txt";
+        int num_livros = numeroRecursos(arquivo);
+        struct Livro *livros = malloc(sizeof(struct Livro) * num_livros);
+
+        lerLivros(arquivo, livros);
+
+        for(int i = 0; i < num_livros; i++){
+            if(livros[i].id == id_recurso){
+                livros[i].disponivel = 1;
+            }
+        }
+
+        salvarLivros(arquivo, livros, num_livros);
+
+        free(livros);
+    }
+
+    if(strcmp(tipo_recurso, "calculadora") == 0){
+        
+        char arquivo[] = "src/bd/calculadoras.txt";
+        int num_calculadoras = numeroRecursos(arquivo);
+        struct Calculadora *calculadoras = malloc(sizeof(struct Calculadora) * num_calculadoras);
+
+        lerCalculadoras(arquivo, calculadoras);
+
+        for(int i = 0; i < num_calculadoras; i++){
+            if(calculadoras[i].id == id_recurso){
+                calculadoras[i].disponivel = 1;
+            }
+        }
+
+        salvarCalculadoras(arquivo, calculadoras, num_calculadoras);
+
+        free(calculadoras);
+    }
+
+    if(strcmp(tipo_recurso, "fone_ouvido") == 0){
+        
+        char arquivo[] = "src/bd/fones_ouvido.txt";
+        int num_fones = numeroRecursos(arquivo);
+        struct Fone_Ouvido *fones_ouvido = malloc(sizeof(struct Fone_Ouvido) * num_fones);
+
+        lerFonesOuvido(arquivo, fones_ouvido);
+
+        for(int i = 0; i < num_fones; i++){
+            if(fones_ouvido[i].id == id_recurso){
+                fones_ouvido[i].disponivel = 1;
+            }
+        }
+
+        salvarFonesOuvido(arquivo, fones_ouvido, num_fones);
+
+        free(fones_ouvido);
+    }
+
+}
+
+void concluirReserva(char sala[]){
+
+        char arquivo[] = "src/bd/salas.txt";
+        int num_salas = numeroRecursos(arquivo);
+        struct Sala *salas = malloc(sizeof(struct Livro) * num_salas);
+
+        lerSalas(arquivo, salas);
+
+        for(int i = 0; i < num_salas; i++){
+
+            if(strcmp(salas[i].sala, sala) == 0){
+                salas[i].disponivel = 1;
+            }
+
+        }
+
+        salvarSalas(arquivo, salas, num_salas);
+
+        free(salas);
 }
 
 // salvarReserva(<diretorio_arquivo>, <ponteiro_de_struct>)
@@ -381,6 +465,7 @@ void salvarReserva(char arquivo[], struct Reserva_Sala *sala){
     fclose(fp);
 }
 
+// salvarEmprestimos(<diretorio_arquivo>, <ponteiro_de_struct>)
 void salvarEmprestimos(char arquivo[], struct Emprestimo *emprestimos, int num_emprestimos){
     FILE *fp = fopen(arquivo, "w");
 
@@ -389,11 +474,30 @@ void salvarEmprestimos(char arquivo[], struct Emprestimo *emprestimos, int num_e
     } else {
 
         for(int i = 0; i < num_emprestimos; i++){
-            fprintf(fp, "%03d;%02d;%s;%s;%d;\n", (emprestimos + i)->id, (emprestimos + i)->id_recurso, (emprestimos + i)->nome_recurso, (emprestimos + i)->data_devolucao, (emprestimos + i)->concluido);
+            fprintf(fp, "%03d;%02d;%s;%s;%s;%d;\n", (emprestimos + i)->id, (emprestimos + i)->id_recurso, (emprestimos + i)->tipo_recurso,(emprestimos + i)->nome_recurso, (emprestimos + i)->data_devolucao, (emprestimos + i)->concluido);
             fflush(fp);
         }
 
         system("clear");    
+    }
+    
+    fclose(fp);
+}
+
+// salvarReservas(<diretorio_arquivo>, <ponteiro_de_struct>, <numero_structs>)
+void salvarReservas(char arquivo[], struct Reserva_Sala *salas, int num_reservas){
+    FILE *fp = fopen(arquivo, "w");
+
+    if(fp == NULL){
+        printf(ERROR "\n ERRO: Falha ao ler arquivo! \n\n");
+    } else {
+
+        for(int i = 0; i < num_reservas; i++){
+            fprintf(fp, "%d;%s;%s;%s;%d;%d;%d;\n", salas[i].id, salas[i].sala, salas[i].data_reserva, salas[i].horario_reserva, salas[i].duracao, salas[i].qntd_pessoas, salas[i].concluido);
+            fflush(fp);
+        }
+
+        system("clear");
     }
     
     fclose(fp);

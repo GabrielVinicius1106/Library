@@ -34,12 +34,15 @@ struct Sala {
     int disponivel;
 };
 
+// calculadora
+
 // Estrutura de Empréstimo
 struct Emprestimo {
     int id;
     int id_recurso;
-    char nome_recurso[32];
+    char tipo_recurso[12];
 
+    char nome_recurso[32];
     char data_devolucao[32];
     int concluido;
 };

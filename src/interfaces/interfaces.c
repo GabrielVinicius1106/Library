@@ -472,7 +472,7 @@ void listarEmprestimos(){
         printf(SUCCESS "\n\n Digite %d para RETORNAR! ", (indice + 1));
 
         printf(HELP "\n\n Insira o EMPRÉSTIMO p/ CONCLUIR >> ");
-        opcao = input(); // 1
+        opcao = input();
 
         if(opcao == (indice + 1)){
             free(emprestimos);
@@ -489,7 +489,7 @@ void listarEmprestimos(){
 
             emprestimos[indice_concluir].concluido = 1;
 
-            // [] Ao concluir empréstimo, marcar o RECURSO correspondente como DISPONÍVEL
+            concluirEmprestimo(emprestimos[indice_concluir].tipo_recurso, emprestimos[indice_concluir].id_recurso);
 
             salvarEmprestimos(arquivo_emprestimos, emprestimos, num_emprestimos);
         }
@@ -506,44 +506,78 @@ void listarReservas(){
     
     char arquivo_reservas[] = "src/bd/reservas.txt";
     
-    int num_reservas = numeroRecursos(arquivo_reservas);
-    
-    struct Reserva_Sala *reservas = malloc(sizeof(struct Reserva_Sala) * num_reservas);
-
-    lerReservas(arquivo_reservas, reservas);
-
     // ===================================================
-
+    
+    char message[32] = "";
+    
     do {
+        
+        int num_reservas = numeroRecursos(arquivo_reservas);
+        
+        struct Reserva_Sala *reservas = malloc(sizeof(struct Reserva_Sala) * num_reservas);
+        
+        lerReservas(arquivo_reservas, reservas);
+        
         system("clear");
     
         printf(OUTPUT "\n <--- RESERVAS REALIZADAS ---> \n");
         
-        if(!num_reservas){
-            printf(ERROR "\n Não há reservas realizadas!");
-        } else {
-            for(int i = 0; i < num_reservas; i++){
+        if(strcmp(message, "") != 0){
+            printf(ERROR "\n %s ", message);
+        }
 
-                int concluido = (reservas + i)->concluido;
+        int *nao_concluidos = malloc(sizeof(int) * num_reservas);
 
-                if(concluido){
-                    printf(SUCCESS);
-                } else {
-                    printf(OUTPUT);
-                }
-                
-                printf("\n (%d) %s  ( %-10s  %-5s)", (i + 1), (reservas + i)->sala, (reservas + i)->data_reserva, (reservas + i)->horario_reserva);
+        int indice = 0;
+        
+        for(int i = 0; i < num_reservas; i++){
+
+            if(reservas[i].concluido == 0){
+                nao_concluidos[indice] = i;
+                printf(SUCCESS "\n (%d) %s  ( %-10s  %-5s)", (indice + 1), (reservas + i)->sala, (reservas + i)->data_reserva, (reservas + i)->horario_reserva);
+                indice++;
             }
+            
+        }
+
+        if(!indice){
+            printf(ERROR "\n Não há empréstimos realizados!");
         }
 
         printf(OUTPUT "\n\n ================================ ");
         
-        printf(SUCCESS "\n\n Pressione ENTER para retornar! ");
-        opcao = input();
+        printf("\n Reservas pendentes: %d", indice);
         
+        printf(SUCCESS "\n\n Digite %d para RETORNAR! ", (indice + 1));
+
+        printf(HELP "\n\n Insira o EMPRÉSTIMO p/ CONCLUIR >> ");
+        opcao = input();
+
+        if(opcao == (indice + 1)){
+            free(nao_concluidos);
+            free(reservas);
+            break;
+        }
+        
+        if((opcao < 1 || opcao > (indice + 1))){
+            sprintf(message, "Opção INVÁLIDA!\n");
+        } else {
+            strcpy(message, "");
+
+            int indice_concluir = nao_concluidos[opcao - 1];
+
+            reservas[indice_concluir].concluido = 1;
+
+            concluirReserva(reservas[indice_concluir].sala);
+
+            salvarReservas(arquivo_reservas, reservas, num_reservas);
+        }
+
+        free(nao_concluidos);
+        free(reservas);
+    
     } while(opcao != 0);
     
-    free(reservas);
 }
 
 void emprestimoRecurso(int id_recurso, char nome_recurso[], char tipo_recurso[]){
@@ -559,6 +593,7 @@ void emprestimoRecurso(int id_recurso, char nome_recurso[], char tipo_recurso[])
     // Novo Empréstimo
     novo_emprestimo.id = randomID();
     novo_emprestimo.id_recurso = id_recurso;
+    strcpy(novo_emprestimo.tipo_recurso, tipo_recurso);
     strcpy(novo_emprestimo.nome_recurso, nome_recurso);
     sprintf(novo_emprestimo.data_devolucao, "%02d/%02d/%02d %02d:%02d", data_devolucao.dia, data_devolucao.mes, data_devolucao.ano, data_devolucao.hora, data_devolucao.minuto);
     novo_emprestimo.concluido = 0;

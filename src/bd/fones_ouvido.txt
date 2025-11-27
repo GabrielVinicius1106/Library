@@ -1,4 +1,4 @@
 1;JBL Wave 200 TWSJBL;JBL;1;
 2;QCY T20;QCY;1;
-3;JBL Wave Flex;JBL;0;
+3;JBL Wave Flex;JBL;1;
 4;Redragon Zeus;Redragon;1;
