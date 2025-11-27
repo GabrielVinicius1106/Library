@@ -32,8 +32,23 @@ void listarLivros(){
         if(!num_livros){
             printf(ERROR "\n Não há livros disponíveis!");
         } else {
+
+            printf(ERROR "\n Indisponível");
+            printf(SUCCESS "\n Disponível");
+
+            printf("\n");
+
             for(int i = 0; i < num_livros; i++){
-                printf(OUTPUT "\n (%d) %s", (i + 1), (livros + i)->nome);
+
+                int disponivel = (livros + i)->disponivel;
+
+                if(disponivel){
+                    printf(SUCCESS);
+                } else {
+                    printf(ERROR);
+                }
+
+                printf("\n (%02d) %-32.32s - %s", (i + 1), (livros + i)->nome, (livros + i)->autor);
             }
         }
 
@@ -48,7 +63,7 @@ void listarLivros(){
         if(opcao == (num_livros + 1)){
             break;
         } else if(opcao >= 1 && opcao <= num_livros){
-            emprestimoRecurso((livros + opcao - 1)->id, (livros + opcao - 1)->nome);
+            emprestimoRecurso((livros + opcao - 1)->id, (livros + opcao - 1)->nome, "livro");
         }
         
     } while(opcao < 1 || opcao > num_livros);
@@ -78,8 +93,23 @@ void listarCalculadoras(){
         if(!num_calculadoras){
             printf(ERROR "\n Não há calculadoras disponíveis!");
         } else {
+
+            printf(ERROR "\n Indisponível");
+            printf(SUCCESS "\n Disponível");
+
+            printf("\n");
+
             for(int i = 0; i < num_calculadoras; i++){
-                printf(OUTPUT "\n (%d) %s", (i + 1), (calculadoras + i)->modelo);
+
+                int disponivel = (calculadoras + i)->disponivel;
+
+                if(disponivel){
+                    printf(SUCCESS);
+                } else {
+                    printf(ERROR);
+                }
+
+                printf("\n (%02d) %-8.8s - %s", (i + 1), (calculadoras + i)->modelo, (calculadoras + i)->marca);
             }
         }
 
@@ -94,7 +124,7 @@ void listarCalculadoras(){
         if(opcao == (num_calculadoras + 1)){
             break;
         } else if(opcao >= 1 && opcao <= num_calculadoras) {
-            emprestimoRecurso((calculadoras + opcao - 1)->id, (calculadoras + opcao - 1)->modelo);
+            emprestimoRecurso((calculadoras + opcao - 1)->id, (calculadoras + opcao - 1)->modelo, "calculadora");
         }
         
     } while(opcao < 1 || opcao > num_calculadoras);
@@ -125,8 +155,23 @@ void listarFonesOuvido(){
         if(!num_fones){
             printf(ERROR "\n Não há fones de ouvido disponíveis!");
         } else {
+
+            printf(ERROR "\n Indisponível");
+            printf(SUCCESS "\n Disponível");
+
+            printf("\n");
+
             for(int i = 0; i < num_fones; i++){
-                printf(OUTPUT "\n (%d) %s", (i + 1), (fones_ouvido + i)->modelo);
+
+                int disponivel = (fones_ouvido + i)->disponivel;
+
+                if(disponivel){
+                    printf(SUCCESS);
+                } else {
+                    printf(ERROR);
+                }
+
+                printf("\n (%02d) %-16.16s - %s", (i + 1), (fones_ouvido + i)->modelo, (fones_ouvido + i)->marca);
             }
         }
 
@@ -141,7 +186,7 @@ void listarFonesOuvido(){
         if(opcao == (num_fones + 1)){
             break;
         } else if(opcao >= 1 && opcao <= num_fones) {
-            emprestimoRecurso((fones_ouvido + opcao - 1)->id, (fones_ouvido + opcao - 1)->modelo);
+            emprestimoRecurso((fones_ouvido + opcao - 1)->id, (fones_ouvido + opcao - 1)->modelo, "fone_ouvido");
         }
         
     } while(opcao < 1 || opcao > num_fones);
@@ -171,8 +216,23 @@ void listarSalas(){
         if(!num_salas){
             printf(ERROR "\n Não há salas disponíveis!");
         } else {
+
+            printf(ERROR "\n Indisponível");
+            printf(SUCCESS "\n Disponível");
+
+            printf("\n");
+
             for(int i = 0; i < num_salas; i++){
-                printf(OUTPUT "\n (%d) Sala: %s | Capacidade: %d ", (i + 1), (salas + i)->sala, (salas + i)->max_pessoas);
+
+                int disponivel = (salas + i)->disponivel;
+
+                if(disponivel){
+                    printf(SUCCESS);
+                } else {
+                    printf(ERROR);
+                }
+
+                printf("\n (%02d) %-8.8s | %02d pessoas ", (i + 1), (salas + i)->sala, (salas + i)->max_pessoas);
             }
         }
 
@@ -227,7 +287,7 @@ void listarEmprestimos(){
                     printf(OUTPUT);
                 }
 
-                printf("\n (%d) %d   %-16s  %-24s", (i + 1), (emprestimos + i)->id, (emprestimos + i)->nome_recurso, (emprestimos + i)->data_devolucao);
+                printf("\n (%02d) %03d %-32.32s %s", (i + 1), (emprestimos + i)->id, (emprestimos + i)->nome_recurso, (emprestimos + i)->data_devolucao);
             }
         }
 
@@ -287,7 +347,7 @@ void listarReservas(){
     free(reservas);
 }
 
-void emprestimoRecurso(int id_recurso, char nome_recurso[]){
+void emprestimoRecurso(int id_recurso, char nome_recurso[], char tipo_recurso[]){
     // Criação de um Empréstimo
     
     struct Emprestimo novo_emprestimo;
@@ -303,6 +363,67 @@ void emprestimoRecurso(int id_recurso, char nome_recurso[]){
     strcpy(novo_emprestimo.nome_recurso, nome_recurso);
     sprintf(novo_emprestimo.data_devolucao, "%d/%d/%d %d:%d", data_devolucao.dia, data_devolucao.mes, data_devolucao.ano, data_devolucao.hora, data_devolucao.minuto);
     novo_emprestimo.concluido = 0;
+
+    // Lógica para Alterar Disponibilidade de Recurso
+    if(strcmp(tipo_recurso, "livro") == 0){
+        char arquivo[] = "src/bd/livros.txt";
+        
+        int num_livros = numeroRecursos(arquivo);
+
+        struct Livro *livros = malloc(sizeof(struct Livro) * num_livros);
+
+        lerLivros(arquivo, livros);
+
+        for(int i = 0; i < num_livros; i++){
+            if((livros + i)->id == id_recurso){
+                (livros + i)->disponivel = 0;
+            }
+        }
+
+        salvarLivros(arquivo, livros, num_livros);
+
+        free(livros);
+    }
+
+    if(strcmp(tipo_recurso, "calculadora") == 0){
+        char arquivo[] = "src/bd/calculadoras.txt";
+
+        int num_calculadoras = numeroRecursos(arquivo);
+
+        struct Calculadora *calculadoras = malloc(sizeof(struct Calculadora) * num_calculadoras);
+
+        lerCalculadoras(arquivo, calculadoras);
+
+        for(int i = 0; i < num_calculadoras; i++){
+            if((calculadoras + i)->id == id_recurso){
+                (calculadoras + i)->disponivel = 0;
+            }
+        }
+
+        salvarCalculadoras(arquivo, calculadoras, num_calculadoras);
+
+        free(calculadoras);
+    }
+
+    if(strcmp(tipo_recurso, "fone_ouvido") == 0){
+        char arquivo[] = "src/bd/fones_ouvido.txt";
+
+        int num_fones = numeroRecursos(arquivo);
+
+        struct Fone_Ouvido *fones_ouvido = malloc(sizeof(struct Fone_Ouvido) * num_fones);
+
+        lerFonesOuvido(arquivo, fones_ouvido);
+
+        for(int i = 0; i < num_fones; i++){
+            if((fones_ouvido + i)->id == id_recurso){
+                (fones_ouvido + i)->disponivel = 0;
+            }
+        }
+
+        salvarFonesOuvido(arquivo, fones_ouvido, num_fones);
+
+        free(fones_ouvido);
+    }
 
     salvarEmprestimo(arquivo_emprestimos, &novo_emprestimo);
 
@@ -361,6 +482,7 @@ void reservaSala(char sala[], int max_pessoas){
     sprintf(nova_reserva.horario_reserva, "%d:%d", horas, minutos);
     nova_reserva.duracao = 30;
     nova_reserva.qntd_pessoas = max_pessoas;
+    nova_reserva.concluido = 0;
     
     salvarReserva(arquivo_reservas, &nova_reserva);
     
@@ -458,9 +580,9 @@ void interfaceInicial(){
 
         printf(OUTPUT);
 
-        printf("\n 1 - ACESSAR RECURSOS");
-        printf("\n 2 - LISTAR EMPRÉSTIMOS");
-        printf("\n 3 - LISTAR RESERVAS");
+        printf("\n 1 - ACESSAR RECURSOS DISPONÍVEIS");
+        printf("\n 2 - MEUS EMPRÉSTIMOS");
+        printf("\n 3 - MINHAS RESERVAS");
         printf("\n");
         printf("\n 0 - SAIR");
         

@@ -19,6 +19,10 @@ void lerReservas(char arquivo[], struct Reserva_Sala *reservas);
 
 void salvarLivros(char arquivo[], struct Livro *livros, int num_livros);
 
+void salvarCalculadoras(char arquivo[], struct Calculadora *calculadoras, int num_calculadoras);
+
+void salvarFonesOuvido(char arquivo[], struct Fone_Ouvido *fones_ouvido, int num_fones);
+
 void salvarEmprestimo(char arquivo[], struct Emprestimo *emprestimo);
 
 void salvarReserva(char arquivo[], struct Reserva_Sala *sala);

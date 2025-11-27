@@ -7,6 +7,7 @@ struct Livro {
     char nome[32];
     char autor[32];
     char categoria[16];
+    int disponivel;
 };
 
 // Estrutura Calculadora
@@ -14,6 +15,7 @@ struct Calculadora {
     int id;
     char modelo[8];
     char marca[8];
+    int disponivel;
 };
 
 // Estrutura Fone de Ouvido
@@ -21,12 +23,14 @@ struct Fone_Ouvido {
     int id;
     char modelo[16];
     char marca[16];
+    int disponivel;
 };
 
 // Estrutura Sala de Estudos
 struct Sala {
-    char sala[4];
+    char sala[8];
     int max_pessoas;
+    int disponivel;
 };
 
 // Estrutura de Empréstimo

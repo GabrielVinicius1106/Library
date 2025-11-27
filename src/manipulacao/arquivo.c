@@ -38,16 +38,7 @@ void lerLivros(char arquivo[], struct Livro *livros){
         char nome[32];
         char autor[32];
         char categoria[16];
-        
-        int num_bytes = 0;
-        
-        char c;
-
-        rewind(fp);
-        while((c = getc(fp)) != EOF){
-            num_bytes++;
-        }
-
+        int disponivel;
         
         rewind(fp);
         for(int i = 0; i < num_livros; i++){
@@ -55,12 +46,14 @@ void lerLivros(char arquivo[], struct Livro *livros){
             fscanf(fp, " %d;", &id);
             fscanf(fp, " %[^;];", nome);
             fscanf(fp, " %[^;];", autor);
-            fscanf(fp, " %[^;];\n", categoria);
+            fscanf(fp, " %[^;];", categoria);
+            fscanf(fp, " %d;\n", &disponivel);
 
             (livros + i)->id = id;
             strcpy((livros + i)->nome, nome);
             strcpy((livros + i)->autor, autor);
             strcpy((livros + i)->categoria, categoria);
+            (livros + i)->disponivel = disponivel;
         }
     }
 
@@ -80,27 +73,20 @@ void lerCalculadoras(char arquivo[], struct Calculadora *calculadoras){
         int id;
         char modelo[8];
         char marca[8];
-        
-        int num_bytes = 0;
-        
-        char c;
-
-        rewind(fp);
-        while((c = getc(fp)) != EOF){
-            num_bytes++;
-        }
-
+        int disponivel;
         
         rewind(fp);
         for(int i = 0; i < num_calculadoras; i++){
             
             fscanf(fp, " %d;", &id);
             fscanf(fp, " %[^;];", modelo);
-            fscanf(fp, " %[^;];\n", marca);
+            fscanf(fp, " %[^;];", marca);
+            fscanf(fp, " %d;\n", &disponivel);
 
             (calculadoras + i)->id = id;
             strcpy((calculadoras + i)->modelo, modelo);
             strcpy((calculadoras + i)->marca, marca);
+            (calculadoras + i)->disponivel = disponivel;
         }
     }
 
@@ -120,27 +106,20 @@ void lerFonesOuvido(char arquivo[], struct Fone_Ouvido *fones_ouvido){
         int id;
         char modelo[16];
         char marca[16];
-        
-        int num_bytes = 0;
-        
-        char c;
+        int disponivel;
 
-        rewind(fp);
-        while((c = getc(fp)) != EOF){
-            num_bytes++;
-        }
-
-        
         rewind(fp);
         for(int i = 0; i < num_fones; i++){
             
             fscanf(fp, " %d;", &id);
             fscanf(fp, " %[^;];", modelo);
-            fscanf(fp, " %[^;];\n", marca);
+            fscanf(fp, " %[^;];", marca);
+            fscanf(fp, " %d;\n", &disponivel);
 
             (fones_ouvido + i)->id = id;
             strcpy((fones_ouvido + i)->modelo, modelo);
             strcpy((fones_ouvido + i)->marca, marca);
+            (fones_ouvido + i)->disponivel = disponivel;
         }
     }
 
@@ -157,27 +136,20 @@ void lerSalas(char arquivo[], struct Sala *salas){
 
         int num_salas = numeroRecursos(arquivo);
 
-        char sala[4];
+        char sala[8];
         int max_pessoas;
-        
-        int num_bytes = 0;
-        
-        char c;
-
-        rewind(fp);
-        while((c = getc(fp)) != EOF){
-            num_bytes++;
-        }
-
+        int disponivel;
         
         rewind(fp);
         for(int i = 0; i < num_salas; i++){
             
             fscanf(fp, " %[^;];", sala);
-            fscanf(fp, " %d;\n", &max_pessoas);
+            fscanf(fp, " %d;", &max_pessoas);
+            fscanf(fp, " %d;\n", &disponivel);
 
             strcpy((salas + i)->sala, sala);
             (salas + i)->max_pessoas = max_pessoas;
+            (salas + i)->disponivel = disponivel;
         }
     }
 
@@ -201,16 +173,6 @@ void lerEmprestimos(char arquivo[], struct Emprestimo *emprestimos){
 
         char data_devolucao[24];
         int concluido;
-        
-        int num_bytes = 0;
-        
-        char c;
-
-        rewind(fp);
-        while((c = getc(fp)) != EOF){
-            num_bytes++;
-        }
-
         
         rewind(fp);
         for(int i = 0; i < num_emprestimos; i++){
@@ -288,20 +250,62 @@ void lerReservas(char arquivo[], struct Reserva_Sala *reservas){
 // salvarLivros(<diretorio_arquivo>, <ponteiro_de_struct>, <numero_structs>)
 void salvarLivros(char arquivo[], struct Livro *livros, int num_livros){
 
-    FILE *fp = fopen(arquivo, "r+");
+    FILE *fp = fopen(arquivo, "w");
 
     if(fp == NULL){
         printf(ERROR "\n ERRO: Falha ao ler arquivo! \n\n");
     } else {
 
         for(int i = 0; i < num_livros; i++){
-            fprintf(fp, "%d;%s;%s;%s;\n", (livros + i)->id, (livros + i)->nome, (livros + i)->autor, (livros + i)->categoria);
+            fprintf(fp, "%d;%s;%s;%s;%d;\n", (livros + i)->id, (livros + i)->nome, (livros + i)->autor, (livros + i)->categoria, (livros + i)->disponivel);
             fflush(fp);
         }
 
         system("clear");
 
-        printf(SUCCESS "\n Livros salvos com sucesso! \n");
+        printf(SUCCESS "\n Livro(s) salvos com sucesso! \n");
+    
+    }
+    
+    fclose(fp);
+}
+
+void salvarCalculadoras(char arquivo[], struct Calculadora *calculadoras, int num_calculadoras){
+    FILE *fp = fopen(arquivo, "w");
+
+    if(fp == NULL){
+        printf(ERROR "\n ERRO: Falha ao ler arquivo! \n\n");
+    } else {
+
+        for(int i = 0; i < num_calculadoras; i++){
+            fprintf(fp, "%d;%s;%s;%d;\n", (calculadoras + i)->id, (calculadoras + i)->modelo, (calculadoras + i)->marca, (calculadoras + i)->disponivel);
+            fflush(fp);
+        }
+
+        system("clear");
+
+        printf(SUCCESS "\n Calculadora(s) salvas com sucesso! \n");
+    
+    }
+    
+    fclose(fp);
+}
+
+void salvarFonesOuvido(char arquivo[], struct Fone_Ouvido *fones_ouvido, int num_fones){
+    FILE *fp = fopen(arquivo, "w");
+
+    if(fp == NULL){
+        printf(ERROR "\n ERRO: Falha ao ler arquivo! \n\n");
+    } else {
+
+        for(int i = 0; i < num_fones; i++){
+            fprintf(fp, "%d;%s;%s;%d;\n", (fones_ouvido + i)->id, (fones_ouvido + i)->modelo, (fones_ouvido + i)->marca, (fones_ouvido + i)->disponivel);
+            fflush(fp);
+        }
+
+        system("clear");
+
+        printf(SUCCESS "\n Fone(s) de Ouvido salvos com sucesso! \n");
     
     }
     
