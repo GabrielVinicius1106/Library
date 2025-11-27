@@ -430,44 +430,74 @@ void listarEmprestimos(){
     
     char arquivo_emprestimos[] = "src/bd/emprestimos.txt";
     
-    int num_emprestimos = numeroRecursos(arquivo_emprestimos);
-    
-    struct Emprestimo *emprestimos = malloc(sizeof(struct Emprestimo) * num_emprestimos);
-
-    lerEmprestimos(arquivo_emprestimos, emprestimos);
-
     // ===================================================
-
+            
+    char message[64] = "";
+    
     do {
+        int num_emprestimos = numeroRecursos(arquivo_emprestimos);
+        
+        struct Emprestimo *emprestimos = malloc(sizeof(struct Emprestimo) * num_emprestimos);
+        lerEmprestimos(arquivo_emprestimos, emprestimos);
+
         system("clear");
     
-        printf(OUTPUT "\n <--- EMPRÉSTIMOS REALIZADOS ---> \n");
+        printf(OUTPUT "\n <--- EMPRÉSTIMOS EM ANDAMENTO ---> \n");
         
-        if(!num_emprestimos){
-            printf(ERROR "\n Não há empréstimos realizados!");
-        } else {
-            for(int i = 0; i < num_emprestimos; i++){
+        if(strcmp(message, "") != 0){
+            printf(ERROR "\n %s ", message);
+        }
 
-                int concluido = (emprestimos + i)->concluido;
+        int *nao_concluidos = malloc(sizeof(int) * num_emprestimos);
 
-                if(concluido){
-                    printf(SUCCESS);
-                } else {
-                    printf(OUTPUT);
-                }
+        int indice = 0;
+        
+        for(int i = 0; i < num_emprestimos; i++){
 
-                printf("\n (%02d) %03d %-32.32s %s", (i + 1), (emprestimos + i)->id, (emprestimos + i)->nome_recurso, (emprestimos + i)->data_devolucao);
+            if(emprestimos[i].concluido == 0){
+                nao_concluidos[indice] = i;
+                printf(SUCCESS "\n (%02d) %03d %-32.32s %s", (indice + 1), emprestimos[i].id, emprestimos[i].nome_recurso, emprestimos[i].data_devolucao);        
+                indice++;
             }
         }
 
+        if(!indice){
+            printf(ERROR "\n Não há empréstimos realizados!");
+        }
+
         printf(OUTPUT "\n\n ================================ ");
+
+        printf("\n Empréstimos pendentes: %d", indice);
         
-        printf(SUCCESS "\n\n Pressione ENTER para retornar! ");
-        opcao = input();
+        printf(SUCCESS "\n\n Digite %d para RETORNAR! ", (indice + 1));
+
+        printf(HELP "\n\n Insira o EMPRÉSTIMO p/ CONCLUIR >> ");
+        opcao = input(); // 1
+
+        if(opcao == (indice + 1)){
+            free(emprestimos);
+            free(nao_concluidos);
+            break;
+        }
+
+        if((opcao < 1 || opcao > (indice + 1))){
+            sprintf(message, "Opção INVÁLIDA!\n");
+        } else {
+            strcpy(message, "");
+
+            int indice_concluir = nao_concluidos[opcao - 1];
+
+            emprestimos[indice_concluir].concluido = 1;
+
+            // [] Ao concluir empréstimo, marcar o RECURSO correspondente como DISPONÍVEL
+
+            salvarEmprestimos(arquivo_emprestimos, emprestimos, num_emprestimos);
+        }
+
+        free(nao_concluidos);
+        free(emprestimos);
         
-    } while(opcao != 0);
-    
-    free(emprestimos);
+    } while(1);
 }
 
 void listarReservas(){

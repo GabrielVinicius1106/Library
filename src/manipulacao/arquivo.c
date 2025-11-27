@@ -348,7 +348,7 @@ void salvarEmprestimo(char arquivo[], struct Emprestimo *emprestimo){
         printf(ERROR "\n ERRO: Falha ao ler arquivo! \n\n");
     } else {
 
-        fprintf(fp, "%d;%d;%s;%s;%d;\n", emprestimo->id, emprestimo->id_recurso, emprestimo->nome_recurso, emprestimo->data_devolucao, emprestimo->concluido);
+        fprintf(fp, "%03d;%02d;%s;%s;%d;\n", emprestimo->id, emprestimo->id_recurso, emprestimo->nome_recurso, emprestimo->data_devolucao, emprestimo->concluido);
         fflush(fp);
 
         system("clear");
@@ -376,6 +376,24 @@ void salvarReserva(char arquivo[], struct Reserva_Sala *sala){
 
         printf(SUCCESS "\n Sala %s reservada com sucesso! ", sala->sala);
     
+    }
+    
+    fclose(fp);
+}
+
+void salvarEmprestimos(char arquivo[], struct Emprestimo *emprestimos, int num_emprestimos){
+    FILE *fp = fopen(arquivo, "w");
+
+    if(fp == NULL){
+        printf(ERROR "\n ERRO: Falha ao ler arquivo! \n\n");
+    } else {
+
+        for(int i = 0; i < num_emprestimos; i++){
+            fprintf(fp, "%03d;%02d;%s;%s;%d;\n", (emprestimos + i)->id, (emprestimos + i)->id_recurso, (emprestimos + i)->nome_recurso, (emprestimos + i)->data_devolucao, (emprestimos + i)->concluido);
+            fflush(fp);
+        }
+
+        system("clear");    
     }
     
     fclose(fp);

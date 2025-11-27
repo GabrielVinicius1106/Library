@@ -29,4 +29,6 @@ void salvarEmprestimo(char arquivo[], struct Emprestimo *emprestimo);
 
 void salvarReserva(char arquivo[], struct Reserva_Sala *sala);
 
+void salvarEmprestimos(char arquivo[], struct Emprestimo *emprestimos, int num_emprestimos);
+
 #endif
