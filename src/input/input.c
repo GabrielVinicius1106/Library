@@ -23,7 +23,7 @@ int input(){
 int inputData(int *dia, int *mes, char message[]){
     char buffer[16]; 
       
-    printf(OUTPUT "\n Insira a DATA da RESERVA (dd/mm) >> ");
+    printf(HELP "\n Insira a DATA da RESERVA (dd/mm) >> ");
 
     fgets(buffer, sizeof(buffer), stdin);
     int num_leituras = sscanf(buffer, "%d/%d", dia, mes);
@@ -44,7 +44,7 @@ int inputHorario(int *horas, int *minutos, char message[]){
     
     char buffer[16]; 
       
-    printf(OUTPUT "\n Insira o HORÁRIO da RESERVA (7h - 20h) >> ");
+    printf(HELP "\n Insira o HORÁRIO da RESERVA (7h - 20h) >> ");
 
     fgets(buffer, sizeof(buffer), stdin);
     int num_leituras = sscanf(buffer, "%d:%d", horas, minutos);

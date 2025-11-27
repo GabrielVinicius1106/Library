@@ -28,6 +28,7 @@ struct Fone_Ouvido {
 
 // Estrutura Sala de Estudos
 struct Sala {
+    int id;
     char sala[8];
     int max_pessoas;
     int disponivel;

@@ -24,11 +24,35 @@ void listarLivros(){
 
     // ===================================================
 
+    int livros_disponiveis = 0, indice = 0;
+    int *vetor_disponiveis = malloc(sizeof(int));
+
+    char message[32] = "";
+ 
+    for(int i = 0; i < num_livros; i++){
+            
+        int disponivel = (livros + i)->disponivel;
+
+        if(disponivel){
+            livros_disponiveis += 1;
+
+            vetor_disponiveis = realloc(vetor_disponiveis, sizeof(int) * livros_disponiveis);
+            *(vetor_disponiveis + indice) = (livros + i)->id;
+            indice++;
+        }
+            
+    }
+
     do {
+        
         system("clear");
     
         printf(OUTPUT "\n <--- LIVROS DISPONÍVEIS ---> \n");
-    
+
+        if(strcmp(message, "") != 0){
+            printf(ERROR "\n %s ", message);
+        }
+
         if(!num_livros){
             printf(ERROR "\n Não há livros disponíveis!");
         } else {
@@ -44,30 +68,50 @@ void listarLivros(){
 
                 if(disponivel){
                     printf(SUCCESS);
+                    printf("\n (%02d) %-32.32s - %s", (i + 1), (livros + i)->nome, (livros + i)->autor);
                 } else {
                     printf(ERROR);
+                    printf("\n (--) %-32.32s - %s", (livros + i)->nome, (livros + i)->autor);
                 }
 
-                printf("\n (%02d) %-32.32s - %s", (i + 1), (livros + i)->nome, (livros + i)->autor);
             }
         }
 
         printf(OUTPUT "\n\n ================================ ");
+
+        printf(OUTPUT "\n Livros Disponíveis: %d", livros_disponiveis);
         
         printf(SUCCESS "\n\n Digite %d para sair! \n", (num_livros + 1));
 
-        printf(HELP "\n Insira o livro desejado >> ");
+        printf(HELP "\n Insira o LIVRO desejado >> ");
         opcao = input();
-    
-        
+
         if(opcao == (num_livros + 1)){
             break;
-        } else if(opcao >= 1 && opcao <= num_livros){
-            emprestimoRecurso((livros + opcao - 1)->id, (livros + opcao - 1)->nome, "livro");
         }
-        
-    } while(opcao < 1 || opcao > num_livros);
+
+        if(opcao < 1 || opcao > (num_livros + 1)){
+            strcpy(message, "Opção INVÁLIDA!\n");
+        } else {
+            int found = 0;
+            for(int i = 0; i < livros_disponiveis; i++){
+                if((livros + opcao - 1)->id == vetor_disponiveis[i]){
+                    found = 1;
+                }
+            }
     
+            if(found){
+                emprestimoRecurso((livros + opcao - 1)->id, (livros + opcao - 1)->nome, "livro");
+                break;
+            } else {
+                strcpy(message, "Livro INDISPONÍVEL!\n");
+            }
+        }
+
+        
+    } while(1);
+
+    free(vetor_disponiveis);
     free(livros);
 }
 
@@ -85,11 +129,34 @@ void listarCalculadoras(){
 
     // ===================================================
 
+    int calculadoras_disponiveis = 0, indice = 0;
+    int *vetor_disponiveis = malloc(sizeof(int));
+
+    char message[32] = "";
+
+    for(int i = 0; i < num_calculadoras; i++){
+            
+        int disponivel = (calculadoras + i)->disponivel;
+
+        if(disponivel){
+            calculadoras_disponiveis += 1;
+
+            vetor_disponiveis = realloc(vetor_disponiveis, sizeof(int) * calculadoras_disponiveis);
+            *(vetor_disponiveis + indice) = (calculadoras + i)->id;
+            indice++;
+        }
+            
+    }
+
     do {
         system("clear");
     
         printf(OUTPUT "\n <--- CALCULADORAS DISPONÍVEIS ---> \n");
         
+        if(strcmp(message, "") != 0){
+            printf(ERROR "\n %s ", message);
+        }
+
         if(!num_calculadoras){
             printf(ERROR "\n Não há calculadoras disponíveis!");
         } else {
@@ -105,30 +172,48 @@ void listarCalculadoras(){
 
                 if(disponivel){
                     printf(SUCCESS);
+                    printf("\n (%02d) %-8.8s - %s", (i + 1), (calculadoras + i)->modelo, (calculadoras + i)->marca);
                 } else {
                     printf(ERROR);
+                    printf("\n (--) %-8.8s - %s", (calculadoras + i)->modelo, (calculadoras + i)->marca);
                 }
-
-                printf("\n (%02d) %-8.8s - %s", (i + 1), (calculadoras + i)->modelo, (calculadoras + i)->marca);
             }
         }
 
         printf(OUTPUT "\n\n ================================ ");
         
+        printf(OUTPUT "\n Calculadoras Disponíveis: %d", calculadoras_disponiveis);
+        
         printf(SUCCESS "\n\n Digite %d para sair! \n", (num_calculadoras + 1));
 
-        printf(HELP "\n Insira a calculadora desejada >> ");
+        printf(HELP "\n Insira a CALCULADORA desejada >> ");
         opcao = input();
-    
-        
+
         if(opcao == (num_calculadoras + 1)){
             break;
-        } else if(opcao >= 1 && opcao <= num_calculadoras) {
-            emprestimoRecurso((calculadoras + opcao - 1)->id, (calculadoras + opcao - 1)->modelo, "calculadora");
+        }
+
+        if(opcao < 1 || opcao > (num_calculadoras + 1)){
+            strcpy(message, "Opção INVÁLIDA!\n");
+        } else {
+            int found = 0;
+            for(int i = 0; i < calculadoras_disponiveis; i++){
+                if((calculadoras + opcao - 1)->id == vetor_disponiveis[i]){
+                    found = 1;
+                }
+            }
+    
+            if(found){
+                emprestimoRecurso((calculadoras + opcao - 1)->id, (calculadoras + opcao - 1)->modelo, "calculadora");
+                break;
+            } else {
+                strcpy(message, "Calculadora INDISPONÍVEL!\n");
+            }
         }
         
-    } while(opcao < 1 || opcao > num_calculadoras);
+    } while(1);
     
+    free(vetor_disponiveis);
     free(calculadoras);
 
 }
@@ -147,11 +232,34 @@ void listarFonesOuvido(){
 
     // ===================================================
 
+    int fones_disponiveis = 0, indice = 0;
+    int *vetor_disponiveis = malloc(sizeof(int));
+
+    char message[32] = "";
+
+    for(int i = 0; i < num_fones; i++){
+            
+        int disponivel = (fones_ouvido + i)->disponivel;
+
+        if(disponivel){
+            fones_disponiveis += 1;
+
+            vetor_disponiveis = realloc(vetor_disponiveis, sizeof(int) * fones_disponiveis);
+            *(vetor_disponiveis + indice) = (fones_ouvido + i)->id;
+            indice++;
+        }
+            
+    }
+
     do {
         system("clear");
     
         printf(OUTPUT "\n <--- FONES DE OUVIDO DISPONÍVEIS ---> \n");
         
+        if(strcmp(message, "") != 0){
+            printf(ERROR "\n %s ", message);
+        }
+
         if(!num_fones){
             printf(ERROR "\n Não há fones de ouvido disponíveis!");
         } else {
@@ -167,30 +275,48 @@ void listarFonesOuvido(){
 
                 if(disponivel){
                     printf(SUCCESS);
+                    printf("\n (%02d) %-16.16s - %s", (i + 1), (fones_ouvido + i)->modelo, (fones_ouvido + i)->marca);
                 } else {
                     printf(ERROR);
+                    printf("\n (--) %-16.16s - %s", (fones_ouvido + i)->modelo, (fones_ouvido + i)->marca);
                 }
-
-                printf("\n (%02d) %-16.16s - %s", (i + 1), (fones_ouvido + i)->modelo, (fones_ouvido + i)->marca);
             }
         }
 
         printf(OUTPUT "\n\n ================================ ");
         
+        printf(OUTPUT "\n Fones de Ouvido Disponíveis: %d", fones_disponiveis);
+        
         printf(SUCCESS "\n\n Digite %d para sair! \n", (num_fones + 1));
 
-        printf(HELP "\n Insira o fone de ouvido desejado >> ");
+        printf(HELP "\n Insira o FONE DE OUVIDO desejado >> ");
         opcao = input();
-    
-        
+
         if(opcao == (num_fones + 1)){
             break;
-        } else if(opcao >= 1 && opcao <= num_fones) {
-            emprestimoRecurso((fones_ouvido + opcao - 1)->id, (fones_ouvido + opcao - 1)->modelo, "fone_ouvido");
+        }
+
+        if(opcao < 1 || opcao > (num_fones + 1)){
+            strcpy(message, "Opção INVÁLIDA!\n");
+        } else {
+            int found = 0;
+            for(int i = 0; i < fones_disponiveis; i++){
+                if((fones_ouvido + opcao - 1)->id == vetor_disponiveis[i]){
+                    found = 1;
+                }
+            }
+    
+            if(found){
+                emprestimoRecurso((fones_ouvido + opcao - 1)->id, (fones_ouvido + opcao - 1)->modelo, "fone_ouvido");
+                break;
+            } else {
+                strcpy(message, "Fone de Ouvido INDISPONÍVEL!\n");
+            }
         }
         
-    } while(opcao < 1 || opcao > num_fones);
+    } while(1);
     
+    free(vetor_disponiveis);
     free(fones_ouvido);
 }
 
@@ -208,11 +334,34 @@ void listarSalas(){
 
     // ===================================================
 
+    int salas_disponiveis = 0, indice = 0;
+    int *vetor_disponiveis = malloc(sizeof(int));
+
+    char message[32] = "";
+
+    for(int i = 0; i < num_salas; i++){
+            
+        int disponivel = (salas + i)->disponivel;
+
+        if(disponivel){
+            salas_disponiveis += 1;
+
+            vetor_disponiveis = realloc(vetor_disponiveis, sizeof(int) * salas_disponiveis);
+            *(vetor_disponiveis + indice) = (salas + i)->id;
+            indice++;
+        }
+            
+    }
+
     do {
         system("clear");
     
         printf(OUTPUT "\n <--- SALAS DISPONÍVEIS ---> \n");
         
+        if(strcmp(message, "") != 0){
+            printf(ERROR "\n %s ", message);
+        }
+
         if(!num_salas){
             printf(ERROR "\n Não há salas disponíveis!");
         } else {
@@ -228,30 +377,48 @@ void listarSalas(){
 
                 if(disponivel){
                     printf(SUCCESS);
+                    printf("\n (%02d) %-8.8s | %02d pessoas ", (i + 1), (salas + i)->sala, (salas + i)->max_pessoas);
                 } else {
                     printf(ERROR);
+                    printf("\n (--) %-8.8s | %02d pessoas ", (salas + i)->sala, (salas + i)->max_pessoas);
                 }
-
-                printf("\n (%02d) %-8.8s | %02d pessoas ", (i + 1), (salas + i)->sala, (salas + i)->max_pessoas);
             }
         }
 
         printf(OUTPUT "\n\n ================================ ");
         
+        printf(OUTPUT "\n Salas Disponíveis: %d", salas_disponiveis);
+        
         printf(SUCCESS "\n\n Digite %d para sair! \n", (num_salas + 1));
 
-        printf(HELP "\n Insira a sala desejada >> ");
+        printf(HELP "\n Insira a SALA desejada >> ");
         opcao = input();
-    
-        
+
         if(opcao == (num_salas + 1)){
             break;
-        } else if(opcao >= 1 && opcao <= num_salas){
-            reservaSala((salas + opcao - 1)->sala, (salas + opcao - 1)->max_pessoas);
+        }
+
+        if(opcao < 1 || opcao > (num_salas + 1)){
+            strcpy(message, "Opção INVÁLIDA!\n");
+        } else {
+            int found = 0;
+            for(int i = 0; i < salas_disponiveis; i++){
+                if((salas + opcao - 1)->id == vetor_disponiveis[i]){
+                    found = 1;
+                }
+            }
+    
+            if(found){
+                reservaSala((salas + opcao - 1)->id, (salas + opcao - 1)->sala, (salas + opcao - 1)->max_pessoas);
+                break;
+            } else {
+                strcpy(message, "Sala INDISPONÍVEL!\n");
+            }
         }
         
-    } while(opcao < 1 || opcao > num_salas);
-    
+    } while(1);
+
+    free(vetor_disponiveis);
     free(salas);
 }
 
@@ -431,8 +598,7 @@ void emprestimoRecurso(int id_recurso, char nome_recurso[], char tipo_recurso[])
     int opcao = input();
 }
 
-void reservaSala(char sala[], int max_pessoas){
-    
+void reservaSala(int id_sala, char sala[], int max_pessoas){
     // Criação de Reserva de Sala
 
     struct Data data_atual = dataAtual(); 
@@ -442,7 +608,7 @@ void reservaSala(char sala[], int max_pessoas){
     
     // ===================================================
     
-    int horas, minutos, dia, mes, horario_valido = 0, data_valida = 0;
+    int horas, minutos, dia, mes, horario_valido = 0, data_valida = 0, qntd_pessoas = 0, duracao = 0;
     
     char message[64] = "";
     
@@ -450,7 +616,7 @@ void reservaSala(char sala[], int max_pessoas){
         while(!data_valida){
             system("clear");
 
-            printf(OUTPUT "\n <--- RESERVA DE SALA (%s) ---> \n", sala);
+            printf(OUTPUT "\n <--- (%s) DATA ---> \n", sala);
 
             if(strcmp(message, "") != 0){
                 printf(ERROR "\n %s ", message);
@@ -464,7 +630,7 @@ void reservaSala(char sala[], int max_pessoas){
         while(!horario_valido){
             system("clear");
 
-            printf(OUTPUT "\n <--- RESERVA DE SALA (%s) ---> \n", sala);
+            printf(OUTPUT "\n <--- (%s) HORÁRIO ---> \n", sala);
 
             if(strcmp(message, "") != 0){
                 printf(ERROR "\n %s ", message);
@@ -472,6 +638,47 @@ void reservaSala(char sala[], int max_pessoas){
 
             horario_valido = inputHorario(&horas, &minutos, message);        
         }
+
+        strcpy(message, "");
+
+        do {
+            system("clear");
+
+            printf(OUTPUT "\n <--- (%s) DURAÇÃO ---> \n", sala);
+
+            if(strcmp(message, "") != 0){
+                printf(ERROR "\n %s ", message);
+            }
+
+            printf(HELP "\n Insira o TEMPO DE DURAÇÃO (15min - 300min) >> ");
+            duracao = input();
+
+            if(duracao < 15 || duracao > 300){
+                strcpy(message, "Insira uma duração válida (15min - 300min)!\n");
+            }
+
+        } while(duracao < 15 || duracao > 300);
+
+        strcpy(message, "");
+
+         do {
+            system("clear");
+
+            printf(OUTPUT "\n <--- (%s) No PESSOAS ---> \n", sala);
+
+            if(strcmp(message, "") != 0){
+                printf(ERROR "\n %s ", message);
+            }
+
+            printf(HELP "\n Insira a QUANTIDADE DE PESSOAS >> ");
+            qntd_pessoas = input();
+
+            if(qntd_pessoas < 1 || qntd_pessoas > max_pessoas){
+                sprintf(message, "Insira uma quantidade válida (1 - %d)!\n", max_pessoas);
+            }
+
+        } while(qntd_pessoas < 1 || qntd_pessoas > max_pessoas);
+
         
     } while(!horario_valido || !data_valida);
     
@@ -480,9 +687,30 @@ void reservaSala(char sala[], int max_pessoas){
     strcpy(nova_reserva.sala, sala);
     sprintf(nova_reserva.data_reserva, "%d/%d/%d", dia, mes, data_atual.ano);
     sprintf(nova_reserva.horario_reserva, "%d:%d", horas, minutos);
-    nova_reserva.duracao = 30;
-    nova_reserva.qntd_pessoas = max_pessoas;
+    nova_reserva.duracao = duracao;
+    nova_reserva.qntd_pessoas = qntd_pessoas;
     nova_reserva.concluido = 0;
+
+    // Alterar Disponibilidade de Sala
+
+    char arquivo[] = "src/bd/salas.txt";
+        
+    int num_salas = numeroRecursos(arquivo);
+
+    struct Sala *salas = malloc(sizeof(struct Sala) * num_salas);
+
+    lerSalas(arquivo, salas);
+
+    for(int i = 0; i < num_salas; i++){
+        if((salas + i)->id == id_sala){
+            (salas + i)->disponivel = 0;
+            break;
+        }
+    }
+
+    salvarSalas(arquivo, salas, num_salas);
+
+    free(salas);
     
     salvarReserva(arquivo_reservas, &nova_reserva);
     
@@ -490,6 +718,8 @@ void reservaSala(char sala[], int max_pessoas){
 
     printf(RESET "\n Sala: %s", sala);
     printf(RESET "\n Data: %s %s", nova_reserva.data_reserva, nova_reserva.horario_reserva);
+    printf(RESET "\n Duração: %dmin", duracao);
+    printf(RESET "\n Qntd de Pessoas: %d", qntd_pessoas);
 
     printf(SUCCESS "\n\n Pressione ENTER para retornar ");  
     int opcao = input();

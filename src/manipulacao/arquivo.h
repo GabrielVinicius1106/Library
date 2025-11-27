@@ -23,6 +23,8 @@ void salvarCalculadoras(char arquivo[], struct Calculadora *calculadoras, int nu
 
 void salvarFonesOuvido(char arquivo[], struct Fone_Ouvido *fones_ouvido, int num_fones);
 
+void salvarSalas(char arquivo[], struct Sala *salas, int num_salas);
+
 void salvarEmprestimo(char arquivo[], struct Emprestimo *emprestimo);
 
 void salvarReserva(char arquivo[], struct Reserva_Sala *sala);

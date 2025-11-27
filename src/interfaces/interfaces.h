@@ -17,7 +17,7 @@ void acessarRecursos();
 
 void emprestimoRecurso(int id_recurso, char nome_recurso[], char tipo_recurso[]);
 
-void reservaSala(char sala[], int max_pessoas);
+void reservaSala(int id_sala, char sala[], int max_pessoas);
 
 void listarEmprestimos();
 

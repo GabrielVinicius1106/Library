@@ -136,6 +136,7 @@ void lerSalas(char arquivo[], struct Sala *salas){
 
         int num_salas = numeroRecursos(arquivo);
 
+        int id;
         char sala[8];
         int max_pessoas;
         int disponivel;
@@ -143,10 +144,12 @@ void lerSalas(char arquivo[], struct Sala *salas){
         rewind(fp);
         for(int i = 0; i < num_salas; i++){
             
+            fscanf(fp, " %d;", &id);
             fscanf(fp, " %[^;];", sala);
             fscanf(fp, " %d;", &max_pessoas);
             fscanf(fp, " %d;\n", &disponivel);
 
+            (salas + i)->id = id;
             strcpy((salas + i)->sala, sala);
             (salas + i)->max_pessoas = max_pessoas;
             (salas + i)->disponivel = disponivel;
@@ -270,6 +273,7 @@ void salvarLivros(char arquivo[], struct Livro *livros, int num_livros){
     fclose(fp);
 }
 
+// salvarCalculadoras(<diretorio_arquivo>, <ponteiro_de_struct>, <numero_structs>)
 void salvarCalculadoras(char arquivo[], struct Calculadora *calculadoras, int num_calculadoras){
     FILE *fp = fopen(arquivo, "w");
 
@@ -291,6 +295,7 @@ void salvarCalculadoras(char arquivo[], struct Calculadora *calculadoras, int nu
     fclose(fp);
 }
 
+// salvarFonesOuvido(<diretorio_arquivo>, <ponteiro_de_struct>, <numero_structs>)
 void salvarFonesOuvido(char arquivo[], struct Fone_Ouvido *fones_ouvido, int num_fones){
     FILE *fp = fopen(arquivo, "w");
 
@@ -306,6 +311,28 @@ void salvarFonesOuvido(char arquivo[], struct Fone_Ouvido *fones_ouvido, int num
         system("clear");
 
         printf(SUCCESS "\n Fone(s) de Ouvido salvos com sucesso! \n");
+    
+    }
+    
+    fclose(fp);
+}
+
+// salvarSalas(<diretorio_arquivo>, <ponteiro_de_struct>, <numero_structs>)
+void salvarSalas(char arquivo[], struct Sala *salas, int num_salas){
+    FILE *fp = fopen(arquivo, "w");
+
+    if(fp == NULL){
+        printf(ERROR "\n ERRO: Falha ao ler arquivo! \n\n");
+    } else {
+
+        for(int i = 0; i < num_salas; i++){
+            fprintf(fp, "%d;%s;%d;%d;\n", (salas + i)->id, (salas + i)->sala, (salas + i)->max_pessoas, (salas + i)->disponivel);
+            fflush(fp);
+        }
+
+        system("clear");
+
+        printf(SUCCESS "\n Salas salvas com sucesso! \n");
     
     }
     
