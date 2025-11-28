@@ -22,6 +22,16 @@ int input(){
     }
 }
 
+void inputString(char string[], int tamanho){
+
+    fgets(string, tamanho, stdin);
+
+    for(int i = 0; i < tamanho; i++){
+        if(string[i] == '\n') string[i] = '\0';
+    }
+
+}
+
 int inputData(int *dia, int *mes, char message[]){
     
     // Resolver VALIDAÇÃO de DATAS (inserção de datas passadas)

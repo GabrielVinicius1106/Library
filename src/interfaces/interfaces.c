@@ -450,9 +450,9 @@ void listarEmprestimos(){
         }
 
         printf(ERROR "\n Atrasados");
-        printf(SUCCESS "\n Em andamento");
+        printf(SUCCESS "\n Pendentes");
 
-        printf(OUTPUT "\n\n ===================== \n");
+        printf(OUTPUT "\n\n ================================ \n");
 
         int *nao_concluidos = malloc(sizeof(int) * num_emprestimos);
 
@@ -541,6 +541,11 @@ void listarReservas(){
         if(strcmp(message, "") != 0){
             printf(ERROR "\n %s ", message);
         }
+
+        printf(ERROR "\n Atrasadas");
+        printf(SUCCESS "\n Pendentes");
+
+        printf(OUTPUT "\n\n ================================ \n");
 
         int *nao_concluidos = malloc(sizeof(int) * num_reservas);
 
@@ -814,6 +819,8 @@ void reservaSala(int id_sala, char sala[], int max_pessoas){
     int opcao = input();
 };
 
+// ============================================================
+
 void acessarRecursos(){
     
     int opcao = -1;
@@ -825,7 +832,7 @@ void acessarRecursos(){
 
         printf(OUTPUT);
     
-        printf("<--- RECURSOS DISPONÍVEIS ---> \n");
+        printf("\n <--- RECURSOS DISPONÍVEIS ---> \n");
         
         if(strcmp(message, "") != 0){
             printf(ERROR "\n %s ", message);
@@ -833,14 +840,14 @@ void acessarRecursos(){
 
         printf(OUTPUT);
 
-        printf("\n 1 - LIVROS");
-        printf("\n 2 - CALCULADORAS");
-        printf("\n 3 - FONES DE OUVIDO");
-        printf("\n 4 - RESERVAR SALA");
+        printf("\n (1) LIVROS");
+        printf("\n (2) CALCULADORAS");
+        printf("\n (3) FONES DE OUVIDO");
+        printf("\n (4) RESERVAR SALA");
         printf("\n");
-        printf("\n 0 - RETORNAR");
+        printf("\n (0) RETORNAR");
     
-        printf(HELP "\n\n Insira uma opção > ");
+        printf(HELP "\n\n Insira uma opção >> ");
         opcao = input();
 
         switch (opcao){
@@ -880,7 +887,7 @@ void acessarRecursos(){
     } while(opcao != 0);
 }
 
-void interfaceInicial(){
+void interfaceInicialUsuario(){
 
     int opcao = -1;
     char message[32] = "";
@@ -891,7 +898,9 @@ void interfaceInicial(){
 
         system("clear");
 
-        printf("\n <--- BEM-VINDO A BIBLIOTECA ---> \n");
+        printf(OUTPUT  "\n <--- BEM-VINDO A BIBLIOTECA ---> ");
+        printf(SUCCESS "\n            (USUÁRIO) \n");
+
 
         if(strcmp(message, "") != 0){
             printf(ERROR "\n %s ", message);
@@ -899,11 +908,11 @@ void interfaceInicial(){
 
         printf(OUTPUT);
 
-        printf("\n 1 - ACESSAR RECURSOS DISPONÍVEIS");
-        printf("\n 2 - MEUS EMPRÉSTIMOS");
-        printf("\n 3 - MINHAS RESERVAS");
+        printf("\n (1) ACESSAR RECURSOS DISPONÍVEIS");
+        printf("\n (2) MEUS EMPRÉSTIMOS");
+        printf("\n (3) MINHAS RESERVAS");
         printf("\n");
-        printf("\n 0 - SAIR");
+        printf("\n (0) SAIR");
         
         printf(HELP "\n\n Insira uma opção >> ");
         opcao = input();
@@ -940,10 +949,301 @@ void interfaceInicial(){
 
     } while(opcao != 0);
 
+}
+
+void adicionarLivro(){
+
+    int opcao = 0;
+
+    char arquivo[] = "src/bd/livros.txt";
+    
+    int num_livros = numeroRecursos(arquivo);
+    
+    struct Livro *livros = malloc(sizeof(struct Livro) * num_livros);
+
+    lerLivros(arquivo, livros);
+
+    // ========================================================
+
+    char nome_livro[32], autor[32], categoria[16];
+
     system("clear");
 
-    printf(SUCCESS "\n Obrigado por utilizar! \n\n\n");
+    printf(OUTPUT "\n <-- ADICIONAR LIVRO --> \n");
 
-    printf(RESET);
+    printf(HELP "\n Insira o NOME do LIVRO >> ");
+    inputString(nome_livro, 32);
 
+    printf(HELP "\n Insira o AUTOR >> ");
+    inputString(autor, 32);
+
+    printf(HELP "\n Insira a CATEGORIA >> ");
+    inputString(categoria, 16);
+
+    num_livros++;
+    livros = realloc(livros, sizeof(struct Livro) * num_livros);
+    
+    livros[num_livros - 1].id = randomID();
+    strcpy(livros[num_livros - 1].nome, nome_livro);
+    strcpy(livros[num_livros - 1].autor, autor);
+    strcpy(livros[num_livros - 1].categoria, categoria);
+    livros[num_livros - 1].disponivel = 1;
+    
+    salvarLivros(arquivo, livros, num_livros);
+
+    free(livros);
+}
+
+void adicionarCalculadora(){
+
+    int opcao = 0;
+
+    char arquivo[] = "src/bd/calculadoras.txt";
+    
+    int num_calculadoras = numeroRecursos(arquivo);
+    
+    struct Calculadora *calculadoras = malloc(sizeof(struct Calculadora) * num_calculadoras);
+
+    lerCalculadoras(arquivo, calculadoras);
+
+    // ========================================================
+
+    char modelo[8], marca[8];
+
+    system("clear");
+
+    printf(OUTPUT "\n <-- ADICIONAR CALCULADORA --> \n");
+
+    printf(HELP "\n Insira o MODELO >> ");
+    inputString(modelo, 8);
+
+    printf(HELP "\n Insira a MARCA >> ");
+    inputString(marca, 8);
+
+    num_calculadoras++;
+    calculadoras = realloc(calculadoras, sizeof(struct Calculadora) * num_calculadoras);
+    
+    calculadoras[num_calculadoras - 1].id = randomID();
+    strcpy(calculadoras[num_calculadoras - 1].modelo, modelo);
+    strcpy(calculadoras[num_calculadoras - 1].marca, marca);
+    calculadoras[num_calculadoras - 1].disponivel = 1;
+    
+    salvarCalculadoras(arquivo, calculadoras, num_calculadoras);
+
+    free(calculadoras);
+}
+
+void adicionarFoneOuvido(){
+
+    int opcao = 0;
+
+    char arquivo[] = "src/bd/fones_ouvido.txt";
+    
+    int num_fones = numeroRecursos(arquivo);
+    
+    struct Fone_Ouvido *fones_ouvido = malloc(sizeof(struct Fone_Ouvido) * num_fones);
+
+    lerFonesOuvido(arquivo, fones_ouvido);
+
+    // ========================================================
+
+    char modelo[8], marca[8];
+
+    system("clear");
+
+    printf(OUTPUT "\n <-- ADICIONAR FONE DE OUVIDO --> \n");
+
+    printf(HELP "\n Insira o MODELO >> ");
+    inputString(modelo, 8);
+
+    printf(HELP "\n Insira a MARCA >> ");
+    inputString(marca, 8);
+
+    num_fones++;
+    fones_ouvido = realloc(fones_ouvido, sizeof(struct Fone_Ouvido) * num_fones);
+    
+    fones_ouvido[num_fones - 1].id = randomID();
+    strcpy(fones_ouvido[num_fones - 1].modelo, modelo);
+    strcpy(fones_ouvido[num_fones - 1].marca, marca);
+    fones_ouvido[num_fones - 1].disponivel = 1;
+    
+    salvarFonesOuvido(arquivo, fones_ouvido, num_fones);
+
+    free(fones_ouvido);
+}
+
+void adicionarSala(){
+
+    int opcao = 0;
+
+    char arquivo[] = "src/bd/salas.txt";
+    
+    int num_salas = numeroRecursos(arquivo);
+    
+    struct Sala *salas = malloc(sizeof(struct Sala) * num_salas);
+
+    lerSalas(arquivo, salas);
+
+    // ========================================================
+
+    char sala[8];
+    int max_pessoas;
+
+    system("clear");
+
+    printf(OUTPUT "\n <-- ADICIONAR SALA --> \n");
+
+    printf(HELP "\n Insira a SALA >> ");
+    inputString(sala, 8);
+
+    printf(HELP "\n Insira a CAPACIDADE (pessoas) >> ");
+    max_pessoas = input();
+
+    while(max_pessoas < 1){
+        printf(ERROR " Insira uma quantidade válida ( >= 1) >> ");
+        max_pessoas = input();
+    }
+
+    num_salas++;
+    salas = realloc(salas, sizeof(struct Sala) * num_salas);
+    
+    salas[num_salas - 1].id = randomID();
+    strcpy(salas[num_salas - 1].sala, sala);
+    salas[num_salas - 1].max_pessoas = max_pessoas;
+    salas[num_salas - 1].disponivel = 1;
+    
+    salvarSalas(arquivo, salas, num_salas);
+
+    free(salas);
+}
+
+// ============================================================
+
+void adicionarRecurso(){
+
+    int opcao = -1;
+    char message[32] = "";
+
+    do {
+
+        system("clear");
+
+        printf(OUTPUT);
+    
+        printf("\n <--- ADICIONAR RECURSO ---> \n");
+        
+        if(strcmp(message, "") != 0){
+            printf(ERROR "\n %s ", message);
+        }
+
+        printf(OUTPUT);
+
+        printf("\n (1) LIVRO");
+        printf("\n (2) CALCULADORA");
+        printf("\n (3) FONE DE OUVIDO");
+        printf("\n (4) SALA");
+        printf("\n");
+        printf("\n (0) RETORNAR");
+    
+        printf(HELP "\n\n Insira uma opção >> ");
+        opcao = input();
+
+        switch (opcao){
+            case 0:
+                strcpy(message, "");
+                break;
+            
+            case 1:
+                adicionarLivro();
+                strcpy(message, "");
+                break;
+            
+            case 2:
+                adicionarCalculadora();
+                strcpy(message, "");
+                break;
+
+            case 3:
+                adicionarFoneOuvido();
+                strcpy(message, "");
+                break;
+
+            case 4:
+                adicionarSala();
+                strcpy(message, "");
+                break;
+            
+            default:
+                strcpy(message, "Insira uma opção válida!\n");
+                break;
+        }
+    
+    } while(opcao != 0);
+
+}
+
+void removerRecurso(){
+
+}
+
+void editarRecurso(){
+
+}
+
+void interfaceInicialAdmin(){
+    int opcao = -1;
+    char message[32] = "";
+
+    do {
+        
+        printf(OUTPUT);
+
+        system("clear");
+
+        printf(OUTPUT  "\n <--- BEM-VINDO A BIBLIOTECA ---> ");
+        printf(SUCCESS "\n             (ADMIN) \n");
+
+        if(strcmp(message, "") != 0){
+            printf(ERROR "\n %s ", message);
+        }
+
+        printf(OUTPUT);
+
+        printf("\n (1) ADICIONAR RECURSO");
+        printf("\n (2) REMOVER RECURSO");
+        printf("\n (3) EDITAR RECURSO");
+        printf("\n");
+        printf("\n (0) SAIR");
+        
+        printf(HELP "\n\n Insira uma opção >> ");
+        opcao = input();
+
+        switch (opcao){
+
+            case 0: 
+                strcpy(message, "");
+                break;
+        
+            case 1:
+                adicionarRecurso();
+                strcpy(message, "");
+                break;
+            
+            case 2:
+                // removerRecurso();
+                strcpy(message, "");
+                break;
+
+            case 3:
+                // editarRecurso();
+                strcpy(message, "");
+                break;
+        
+            default:
+                strcpy(message, "Insira uma opção válida!\n");
+                break;
+        
+        }
+
+    } while(opcao != 0);
 }

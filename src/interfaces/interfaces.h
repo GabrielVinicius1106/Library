@@ -21,8 +21,28 @@ void emprestimoRecurso(int id_recurso, char nome_recurso[], char tipo_recurso[])
 
 void reservaSala(int id_sala, char sala[], int max_pessoas);
 
+// ============================================================
+
 void acessarRecursos();
 
-void interfaceInicial();
+void interfaceInicialUsuario();
+
+void adicionarLivro();
+
+void adicionarCalculadora();
+
+void adicionarFoneOuvido();
+
+void adicionarSala();
+
+// ============================================================
+
+void adicionarRecurso();
+
+void removerRecurso();
+
+void editarRecurso();
+
+void interfaceInicialAdmin();
 
 #endif 
