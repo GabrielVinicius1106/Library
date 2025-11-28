@@ -21,6 +21,9 @@ int input(){
 }
 
 int inputData(int *dia, int *mes, char message[]){
+    
+    // Resolver VALIDAÇÃO de DATAS (inserção de datas passadas)
+
     char buffer[16]; 
       
     printf(HELP "\n Insira a DATA da RESERVA (dd/mm) >> ");

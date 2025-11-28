@@ -43,19 +43,21 @@ struct Emprestimo {
     char tipo_recurso[12];
 
     char nome_recurso[32];
+    char data_emprestimo[32];
     char data_devolucao[32];
     int concluido;
+    int atrasado;
 };
 
 // Estrutura de Reserva de Sala
 struct Reserva_Sala {
     int id;
     char sala[8];
-    char data_reserva[16];
-    char horario_reserva[16];
+    char data_reserva[32];
     int duracao;
     int qntd_pessoas;
     int concluido;
+    int atrasado;
 };
 
 // Estrutura de Data

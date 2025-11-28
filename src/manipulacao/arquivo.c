@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "../datas/datas.h"
 #include "../input/input.h"
 #include "../themes/theme.h"
 #include "arquivo.h"
@@ -176,8 +177,10 @@ void lerEmprestimos(char arquivo[], struct Emprestimo *emprestimos){
         char nome_recurso[32];
         char tipo_recurso[12];
 
+        char data_emprestimo[24];
         char data_devolucao[24];
         int concluido;
+        int atrasado;
         
         rewind(fp);
         for(int i = 0; i < num_emprestimos; i++){
@@ -186,15 +189,19 @@ void lerEmprestimos(char arquivo[], struct Emprestimo *emprestimos){
             fscanf(fp, " %d;", &id_recurso);
             fscanf(fp, " %[^;];", tipo_recurso);
             fscanf(fp, " %[^;];", nome_recurso);
+            fscanf(fp, " %[^;];", data_emprestimo);
             fscanf(fp, " %[^;];", data_devolucao);
-            fscanf(fp, " %d;\n", &concluido);
+            fscanf(fp, " %d;", &concluido);
+            fscanf(fp, " %d;\n", &atrasado);
 
             (emprestimos + i)->id = id_emprestimo; 
             (emprestimos + i)->id_recurso = id_recurso; 
             strcpy((emprestimos + i)->tipo_recurso, tipo_recurso);
             strcpy((emprestimos + i)->nome_recurso, nome_recurso);
+            strcpy((emprestimos + i)->data_emprestimo, data_emprestimo);
             strcpy((emprestimos + i)->data_devolucao, data_devolucao);
             (emprestimos + i)->concluido = concluido;
+            (emprestimos + i)->atrasado = atrasado;
         }
     }
 
@@ -214,21 +221,11 @@ void lerReservas(char arquivo[], struct Reserva_Sala *reservas){
 
         int id_reserva;
         char sala[8];
-        char data_reserva[16];
-        char horario_reserva[16];
+        char data_reserva[32];
         int duracao;
         int qntd_pessoas;
         int concluido;
-        
-        int num_bytes = 0;
-        
-        char c;
-
-        rewind(fp);
-        while((c = getc(fp)) != EOF){
-            num_bytes++;
-        }
-
+        int atrasado;
         
         rewind(fp);
         for(int i = 0; i < num_reservas; i++){
@@ -236,18 +233,18 @@ void lerReservas(char arquivo[], struct Reserva_Sala *reservas){
             fscanf(fp, " %d;", &id_reserva);
             fscanf(fp, " %[^;];", sala);
             fscanf(fp, " %[^;];", data_reserva);
-            fscanf(fp, " %[^;];", horario_reserva);
             fscanf(fp, " %d;", &duracao);
             fscanf(fp, " %d;", &qntd_pessoas);
-            fscanf(fp, " %d;\n", &concluido);
+            fscanf(fp, " %d;", &concluido);
+            fscanf(fp, " %d;\n", &atrasado);
 
             (reservas + i)->id = id_reserva; 
             strcpy((reservas + i)->sala, sala);
             strcpy((reservas + i)->data_reserva, data_reserva);
-            strcpy((reservas + i)->horario_reserva, horario_reserva);
             (reservas + i)->duracao = duracao; 
             (reservas + i)->qntd_pessoas = qntd_pessoas; 
             (reservas + i)->concluido = concluido; 
+            (reservas + i)->atrasado = atrasado;
         }
     }
 
@@ -349,7 +346,7 @@ void salvarEmprestimo(char arquivo[], struct Emprestimo *emprestimo){
         printf(ERROR "\n ERRO: Falha ao ler arquivo! \n\n");
     } else {
 
-        fprintf(fp, "%03d;%02d;%s;%s;%s;%d;\n", emprestimo->id, emprestimo->id_recurso, emprestimo->tipo_recurso, emprestimo->nome_recurso, emprestimo->data_devolucao, emprestimo->concluido);
+        fprintf(fp, "%03d;%02d;%s;%s;%s;%s;%d;%d;\n", emprestimo->id, emprestimo->id_recurso, emprestimo->tipo_recurso, emprestimo->nome_recurso, emprestimo->data_emprestimo, emprestimo->data_devolucao, emprestimo->concluido, emprestimo->atrasado);
         fflush(fp);
 
         system("clear");
@@ -453,7 +450,7 @@ void salvarReserva(char arquivo[], struct Reserva_Sala *sala){
         printf(ERROR "\n ERRO: Falha ao ler arquivo! \n\n");
     } else {
 
-        fprintf(fp, "%d;%s;%s;%s;%d;%d;%d;\n", sala->id, sala->sala, sala->data_reserva, sala->horario_reserva, sala->duracao, sala->qntd_pessoas, sala->concluido);
+        fprintf(fp, "%d;%s;%s;%d;%d;%d;%d;\n", sala->id, sala->sala, sala->data_reserva, sala->duracao, sala->qntd_pessoas, sala->concluido, sala->atrasado);
         fflush(fp);
 
         system("clear");
@@ -474,7 +471,7 @@ void salvarEmprestimos(char arquivo[], struct Emprestimo *emprestimos, int num_e
     } else {
 
         for(int i = 0; i < num_emprestimos; i++){
-            fprintf(fp, "%03d;%02d;%s;%s;%s;%d;\n", (emprestimos + i)->id, (emprestimos + i)->id_recurso, (emprestimos + i)->tipo_recurso,(emprestimos + i)->nome_recurso, (emprestimos + i)->data_devolucao, (emprestimos + i)->concluido);
+            fprintf(fp, "%03d;%02d;%s;%s;%s;%s;%d;%d;\n", (emprestimos + i)->id, (emprestimos + i)->id_recurso, (emprestimos + i)->tipo_recurso,(emprestimos + i)->nome_recurso, (emprestimos + i)->data_emprestimo, (emprestimos + i)->data_devolucao, (emprestimos + i)->concluido, (emprestimos + i)->atrasado);
             fflush(fp);
         }
 
@@ -493,7 +490,7 @@ void salvarReservas(char arquivo[], struct Reserva_Sala *salas, int num_reservas
     } else {
 
         for(int i = 0; i < num_reservas; i++){
-            fprintf(fp, "%d;%s;%s;%s;%d;%d;%d;\n", salas[i].id, salas[i].sala, salas[i].data_reserva, salas[i].horario_reserva, salas[i].duracao, salas[i].qntd_pessoas, salas[i].concluido);
+            fprintf(fp, "%d;%s;%s;%d;%d;%d;%d;\n", salas[i].id, salas[i].sala, salas[i].data_reserva, salas[i].duracao, salas[i].qntd_pessoas, salas[i].concluido, salas[i].atrasado);
             fflush(fp);
         }
 

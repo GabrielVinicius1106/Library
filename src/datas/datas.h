@@ -9,4 +9,8 @@ struct Data dataAtual();
 
 struct Data dataDevolucao();
 
+int emprestimoAtrasado(struct Emprestimo emprestimo);
+
+int reservaAtrasada(struct Reserva_Sala reserva);
+
 #endif

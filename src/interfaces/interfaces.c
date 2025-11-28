@@ -438,6 +438,7 @@ void listarEmprestimos(){
         int num_emprestimos = numeroRecursos(arquivo_emprestimos);
         
         struct Emprestimo *emprestimos = malloc(sizeof(struct Emprestimo) * num_emprestimos);
+        
         lerEmprestimos(arquivo_emprestimos, emprestimos);
 
         system("clear");
@@ -448,15 +449,29 @@ void listarEmprestimos(){
             printf(ERROR "\n %s ", message);
         }
 
+        printf(ERROR "\n Atrasados");
+        printf(SUCCESS "\n Em andamento");
+
+        printf(OUTPUT "\n\n ===================== \n");
+
         int *nao_concluidos = malloc(sizeof(int) * num_emprestimos);
 
-        int indice = 0;
+        int indice = 0, atrasados = 0;
         
         for(int i = 0; i < num_emprestimos; i++){
 
             if(emprestimos[i].concluido == 0){
+
+                int atrasado = emprestimoAtrasado(emprestimos[i]);
+
+                if(atrasado){
+                    atrasados++;
+                    printf(ERROR "\n (%02d) %03d %-32.32s %s Atrasado", (indice + 1), emprestimos[i].id, emprestimos[i].nome_recurso, emprestimos[i].data_devolucao);        
+                } else {
+                    printf(SUCCESS "\n (%02d) %03d %-32.32s %s", (indice + 1), emprestimos[i].id, emprestimos[i].nome_recurso, emprestimos[i].data_devolucao);        
+                }
+               
                 nao_concluidos[indice] = i;
-                printf(SUCCESS "\n (%02d) %03d %-32.32s %s", (indice + 1), emprestimos[i].id, emprestimos[i].nome_recurso, emprestimos[i].data_devolucao);        
                 indice++;
             }
         }
@@ -465,8 +480,9 @@ void listarEmprestimos(){
             printf(ERROR "\n Não há empréstimos realizados!");
         }
 
-        printf(OUTPUT "\n\n ================================ ");
+        printf(OUTPUT "\n\n ================================ ");    
 
+        printf("\n Empréstimos atrasados: %d", atrasados);
         printf("\n Empréstimos pendentes: %d", indice);
         
         printf(SUCCESS "\n\n Digite %d para RETORNAR! ", (indice + 1));
@@ -528,29 +544,38 @@ void listarReservas(){
 
         int *nao_concluidos = malloc(sizeof(int) * num_reservas);
 
-        int indice = 0;
+        int indice = 0, atrasadas = 0;
         
         for(int i = 0; i < num_reservas; i++){
 
             if(reservas[i].concluido == 0){
+                int atrasada = reservaAtrasada(reservas[i]);
+
+                if(atrasada){
+                    atrasadas++;
+                    printf(ERROR "\n (%d) %s  ( %s ) Atrasada", (indice + 1), (reservas + i)->sala, (reservas + i)->data_reserva);
+                } else {
+                    printf(SUCCESS "\n (%d) %s  ( %s )", (indice + 1), (reservas + i)->sala, (reservas + i)->data_reserva);
+                }
+                
                 nao_concluidos[indice] = i;
-                printf(SUCCESS "\n (%d) %s  ( %-10s  %-5s)", (indice + 1), (reservas + i)->sala, (reservas + i)->data_reserva, (reservas + i)->horario_reserva);
                 indice++;
             }
             
         }
 
         if(!indice){
-            printf(ERROR "\n Não há empréstimos realizados!");
+            printf(ERROR "\n Não há reservas realizadas!");
         }
 
         printf(OUTPUT "\n\n ================================ ");
-        
+
+        printf("\n Reservas atrasadas: %d", atrasadas);
         printf("\n Reservas pendentes: %d", indice);
         
         printf(SUCCESS "\n\n Digite %d para RETORNAR! ", (indice + 1));
 
-        printf(HELP "\n\n Insira o EMPRÉSTIMO p/ CONCLUIR >> ");
+        printf(HELP "\n\n Insira a RESERVA p/ CONCLUIR >> ");
         opcao = input();
 
         if(opcao == (indice + 1)){
@@ -584,6 +609,7 @@ void emprestimoRecurso(int id_recurso, char nome_recurso[], char tipo_recurso[])
     // Criação de um Empréstimo
     
     struct Emprestimo novo_emprestimo;
+    struct Data data_emprestimo = dataAtual();
     struct Data data_devolucao;
 
     char arquivo_emprestimos[] = "src/bd/emprestimos.txt"; 
@@ -595,8 +621,10 @@ void emprestimoRecurso(int id_recurso, char nome_recurso[], char tipo_recurso[])
     novo_emprestimo.id_recurso = id_recurso;
     strcpy(novo_emprestimo.tipo_recurso, tipo_recurso);
     strcpy(novo_emprestimo.nome_recurso, nome_recurso);
+    sprintf(novo_emprestimo.data_emprestimo, "%02d/%02d/%02d %02d:%02d", data_emprestimo.dia, data_emprestimo.mes, data_emprestimo.ano, data_emprestimo.hora, data_emprestimo.minuto);
     sprintf(novo_emprestimo.data_devolucao, "%02d/%02d/%02d %02d:%02d", data_devolucao.dia, data_devolucao.mes, data_devolucao.ano, data_devolucao.hora, data_devolucao.minuto);
     novo_emprestimo.concluido = 0;
+    novo_emprestimo.atrasado = 0;
 
     // Lógica para Alterar Disponibilidade de Recurso
     if(strcmp(tipo_recurso, "livro") == 0){
@@ -678,87 +706,81 @@ void reservaSala(int id_sala, char sala[], int max_pessoas){
     int horas, minutos, dia, mes, horario_valido = 0, data_valida = 0, qntd_pessoas = 0, duracao = 0;
     
     char message[64] = "";
+               
+    while(!data_valida){
+        system("clear");
+
+        printf(OUTPUT "\n <--- (%s) DATA ---> \n", sala);
+
+        if(strcmp(message, "") != 0){
+            printf(ERROR "\n %s ", message);
+        }
+
+        data_valida = inputData(&dia, &mes, message);
+    }
     
-    do {                
-        while(!data_valida){
-            system("clear");
+    strcpy(message, "");
 
-            printf(OUTPUT "\n <--- (%s) DATA ---> \n", sala);
+    while(!horario_valido){
+        system("clear");
 
-            if(strcmp(message, "") != 0){
-                printf(ERROR "\n %s ", message);
-            }
+        printf(OUTPUT "\n <--- (%s) HORÁRIO ---> \n", sala);
 
-            data_valida = inputData(&dia, &mes, message);
-        }
-        
-        strcpy(message, "");
-
-        while(!horario_valido){
-            system("clear");
-
-            printf(OUTPUT "\n <--- (%s) HORÁRIO ---> \n", sala);
-
-            if(strcmp(message, "") != 0){
-                printf(ERROR "\n %s ", message);
-            }
-
-            horario_valido = inputHorario(&horas, &minutos, message);        
+        if(strcmp(message, "") != 0){
+            printf(ERROR "\n %s ", message);
         }
 
-        strcpy(message, "");
+        horario_valido = inputHorario(&horas, &minutos, message);        
+    }
 
-        do {
-            system("clear");
+    strcpy(message, "");
 
-            printf(OUTPUT "\n <--- (%s) DURAÇÃO ---> \n", sala);
+    do {
+        system("clear");
 
-            if(strcmp(message, "") != 0){
-                printf(ERROR "\n %s ", message);
-            }
+        printf(OUTPUT "\n <--- (%s) DURAÇÃO ---> \n", sala);
 
-            printf(HELP "\n Insira o TEMPO DE DURAÇÃO (15min - 300min) >> ");
-            duracao = input();
+        if(strcmp(message, "") != 0){
+            printf(ERROR "\n %s ", message);
+        }
 
-            if(duracao < 15 || duracao > 300){
-                strcpy(message, "Insira uma duração válida (15min - 300min)!\n");
-            }
+        printf(HELP "\n Insira o TEMPO DE DURAÇÃO (15min - 300min) >> ");
+        duracao = input();
 
-        } while(duracao < 15 || duracao > 300);
+        if(duracao < 15 || duracao > 300){
+            strcpy(message, "Insira uma duração válida (15min - 300min)!\n");
+        }
 
-        strcpy(message, "");
+    } while(duracao < 15 || duracao > 300);
 
-         do {
-            system("clear");
+    strcpy(message, "");
 
-            printf(OUTPUT "\n <--- (%s) No PESSOAS ---> \n", sala);
+    do {
+        system("clear");
 
-            if(strcmp(message, "") != 0){
-                printf(ERROR "\n %s ", message);
-            }
+        printf(OUTPUT "\n <--- (%s) No PESSOAS ---> \n", sala);
 
-            printf(HELP "\n Insira a QUANTIDADE DE PESSOAS >> ");
-            qntd_pessoas = input();
+        if(strcmp(message, "") != 0){
+            printf(ERROR "\n %s ", message);
+        }
 
-            if(qntd_pessoas < 1 || qntd_pessoas > max_pessoas){
-                sprintf(message, "Insira uma quantidade válida (1 - %d)!\n", max_pessoas);
-            }
+        printf(HELP "\n Insira a QUANTIDADE DE PESSOAS >> ");
+        qntd_pessoas = input();
 
-        } while(qntd_pessoas < 1 || qntd_pessoas > max_pessoas);
+        if(qntd_pessoas < 1 || qntd_pessoas > max_pessoas){
+            sprintf(message, "Insira uma quantidade válida (1 - %d)!\n", max_pessoas);
+        }
 
-        
-    } while(!horario_valido || !data_valida);
+    } while(qntd_pessoas < 1 || qntd_pessoas > max_pessoas);
     
     // Nova Reserva de Sala
     nova_reserva.id = randomID();
     strcpy(nova_reserva.sala, sala);
-    sprintf(nova_reserva.data_reserva, "%02d/%02d/%02d", dia, mes, data_atual.ano);
-    sprintf(nova_reserva.horario_reserva, "%02d:%02d", horas, minutos);
+    sprintf(nova_reserva.data_reserva, "%02d/%02d/%02d %02d:%02d", dia, mes, data_atual.ano, horas, minutos);
     nova_reserva.duracao = duracao;
     nova_reserva.qntd_pessoas = qntd_pessoas;
     nova_reserva.concluido = 0;
-
-    // Alterar Disponibilidade de Sala
+    nova_reserva.atrasado = 0;
 
     char arquivo[] = "src/bd/salas.txt";
         
@@ -784,7 +806,7 @@ void reservaSala(int id_sala, char sala[], int max_pessoas){
     printf("\n");
 
     printf(RESET "\n Sala: %s", sala);
-    printf(RESET "\n Data: %s %s", nova_reserva.data_reserva, nova_reserva.horario_reserva);
+    printf(RESET "\n Data: %s", nova_reserva.data_reserva);
     printf(RESET "\n Duração: %dmin", duracao);
     printf(RESET "\n Qntd de Pessoas: %d", qntd_pessoas);
 
