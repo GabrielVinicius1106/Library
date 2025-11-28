@@ -2,6 +2,8 @@
 #include <string.h>
 
 #include "input.h"
+#include "../structs/structs.h"
+#include "../datas/datas.h"
 #include "../themes/theme.h"
 
 int input(){
@@ -24,12 +26,24 @@ int inputData(int *dia, int *mes, char message[]){
     
     // Resolver VALIDAÇÃO de DATAS (inserção de datas passadas)
 
+    struct Data data_atual = dataAtual();
+
     char buffer[16]; 
       
     printf(HELP "\n Insira a DATA da RESERVA (dd/mm) >> ");
 
     fgets(buffer, sizeof(buffer), stdin);
     int num_leituras = sscanf(buffer, "%d/%d", dia, mes);
+
+    if(*mes < data_atual.mes){
+        sprintf(message, "Insira uma data válida! ( > %d/%d)\n", data_atual.dia, data_atual.mes);
+        return 0;
+    }
+
+    if(*mes == data_atual.mes && *dia <= data_atual.dia){
+        sprintf(message, "Insira uma data válida! ( > %d/%d)\n", data_atual.dia, data_atual.mes);
+        return 0;
+    }
 
     if(num_leituras != 2){
         strcpy(message, "Insira o formato válido (dd/mm)!\n");
