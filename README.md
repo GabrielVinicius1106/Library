@@ -100,11 +100,24 @@ Todas as operações são registradas em arquivos texto localizados em `src/bd/`
 
 ---
 
+
 ## Observações
 
 - Os arquivos de dados ficam em `src/bd/` e são essenciais para o funcionamento do sistema.
 - O sistema utiliza apenas a linha de comando e não possui interface gráfica.
 - Para mais detalhes sobre as funções e estrutura, consulte o arquivo `DOCUMENTACAO_BIBLIOTECA.md`.
+
+### ⚠️ Permissão de Execução no Linux
+
+Ao compilar o projeto, o executável `compile.sh` e `run.sh` podem precisar de permissão de execução. Caso ocorra erro de permissão ao executar, utilize o comando abaixo no terminal:
+
+```bash
+chmod +x compile.sh
+```
+
+```bash
+chmod +x run.sh
+```
 
 ---
 
