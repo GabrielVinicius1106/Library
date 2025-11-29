@@ -1,5 +1,2 @@
 1;Cas-54;Casio;1;
 2;HP-25;HP;1;
-55;Modelo;HP;1;
-8;Modelo ;HP;1;
-62;modelo;marca;1;

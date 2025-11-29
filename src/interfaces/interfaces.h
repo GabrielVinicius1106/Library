@@ -35,11 +35,21 @@ void adicionarFoneOuvido();
 
 void adicionarSala();
 
-// ============================================================
-
 void adicionarRecurso();
 
+// ============================================================
+
+void removerLivro();
+
+void removerCalculadora();
+
+void removerFoneOuvido();
+
+void removerSala();
+
 void removerRecurso();
+
+// ============================================================
 
 void editarRecurso();
 
