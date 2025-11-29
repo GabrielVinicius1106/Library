@@ -110,46 +110,5 @@ Todas as operações são registradas em arquivos texto localizados em `src/bd/`
 
 **Projeto desenvolvido por Gabriel Vinícius. Todos os direitos reservados.**
 
-## Como Compilar e Executar
-
-### No Linux
-
-1. **Compilar:**
-   ```bash
-   ./compile.sh
-   ```
-   ou
-   ```bash
-   bash compile.sh
-   ```
-
-2. **Executar:**
-   ```bash
-   ./run.sh
-   ```
-   ou
-   ```bash
-   bash run.sh
-   ```
-
-### No Windows
-
-1. **Compilar:**
-   Clique duas vezes em `compile.bat` ou execute no Prompt de Comando:
-   ```bat
-   compile.bat
-   ```
-
-2. **Executar:**
-   Clique duas vezes em `run.bat` ou execute no Prompt de Comando:
-   ```bat
-   run.bat
-   ```
-
-## Observações
-- Os arquivos de dados ficam em `src/bd/` e são essenciais para o funcionamento do sistema.
-- O sistema utiliza apenas a linha de comando e não possui interface gráfica.
-- Para mais detalhes sobre as funções e estrutura, consulte o arquivo `DOCUMENTACAO_BIBLIOTECA.md`.
-
 ---
 Desenvolvido para fins acadêmicos na disciplina de Linguagem de Programação.
