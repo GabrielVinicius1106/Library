@@ -3,4 +3,4 @@
 3;Harry Potter 3;JK Rowling;Fantasia;1;
 4;Senhor dos Aneis;JRR Tolkien;Fantasia;1;
 5;O Pequeno Principe;Antoine de Saint Exupery;Romance;1;
-6;O Homem Mais Rico da Babilonia;George S. Clason;Financas;1;
+6;O Homem Mais Rico da Babilonia;George S. Clason;Financas;0;
