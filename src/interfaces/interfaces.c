@@ -1200,7 +1200,7 @@ void removerLivro(){
         
         system("clear");
     
-        printf(OUTPUT "\n <-- LIVROS --> \n");
+        printf(OUTPUT "\n <-- LIVROS (REMOVER) --> \n");
 
         if(strcmp(message, "") != 0){
             printf(ERROR "\n %s ", message);
@@ -1274,7 +1274,7 @@ void removerCalculadora(){
         
         system("clear");
     
-        printf(OUTPUT "\n <-- CALCULADORAS --> \n");
+        printf(OUTPUT "\n <-- CALCULADORAS (REMOVER) --> \n");
 
         if(strcmp(message, "") != 0){
             printf(ERROR "\n %s ", message);
@@ -1348,7 +1348,7 @@ void removerFoneOuvido(){
         
         system("clear");
     
-        printf(OUTPUT "\n <-- FONES DE OUVIDO --> \n");
+        printf(OUTPUT "\n <-- FONES DE OUVIDO (REMOVER) --> \n");
 
         if(strcmp(message, "") != 0){
             printf(ERROR "\n %s ", message);
@@ -1422,7 +1422,7 @@ void removerSala(){
         
         system("clear");
     
-        printf(OUTPUT "\n <-- SALAS --> \n");
+        printf(OUTPUT "\n <-- SALAS (REMOVER) --> \n");
 
         if(strcmp(message, "") != 0){
             printf(ERROR "\n %s ", message);
@@ -1540,7 +1540,351 @@ void removerRecurso(){
 
 // ============================================================
 
+void editarLivro(){
+
+    int opcao = 0;
+
+    char arquivo[] = "src/bd/livros.txt";
+    
+    // ========================================================
+    
+    char message[32] = "";
+    
+    do {
+
+        int num_recursos = numeroRecursos(arquivo);
+        
+        struct Livro *livros = malloc(sizeof(struct Livro) * num_recursos);
+        
+        lerLivros(arquivo, livros);
+        
+        system("clear");
+    
+        printf(OUTPUT "\n <-- LIVROS (EDITAR) --> \n");
+
+        if(strcmp(message, "") != 0){
+            printf(ERROR "\n %s ", message);
+        }
+
+        if(num_recursos == 0){
+            printf(ERROR "\n Não há LIVROS!");
+        }
+
+        for(int i = 0; i < num_recursos; i++){
+    
+            printf(OUTPUT "\n (%02d) %03d %-32.32s %-32.32s %s", (i + 1), livros[i].id, livros[i].nome, livros[i].autor, livros[i].categoria);
+    
+        }
+    
+        printf(OUTPUT "\n\n ================================ ");
+    
+        printf("\n");
+
+        printf(SUCCESS "\n Digite 0 para RETORNAR! \n");
+    
+        printf(HELP "\n Insira o LIVRO a EDITAR >> ");
+        opcao = input();
+
+        if(opcao == 0){
+            free(livros);
+            break;
+        }
+
+        if(opcao < 0 || opcao > (num_recursos)){
+            strcpy(message, "Insira uma OPÇÃO VÁLIDA!\n");
+        } else {
+
+            printf("\n Insira NOVO NOME >> ");
+            inputString(livros[opcao - 1].nome, 32);
+
+            printf("\n Insira NOVO AUTOR >> ");
+            inputString(livros[opcao - 1].autor, 32);
+
+            printf("\n Insira NOVA CATEGORIA >> ");
+            inputString(livros[opcao - 1].categoria, 16);
+
+            salvarLivros(arquivo, livros, num_recursos);
+
+            free(livros);
+        }   
+
+    } while(opcao != 0);
+
+}
+
+void editarCalculadora(){
+
+    int opcao = 0;
+
+    char arquivo[] = "src/bd/calculadoras.txt";
+    
+    // ========================================================
+    
+    char message[32] = "";
+    
+    do {
+
+        int num_recursos = numeroRecursos(arquivo);
+        
+        struct Calculadora *calculadoras = malloc(sizeof(struct Calculadora) * num_recursos);
+        
+        lerCalculadoras(arquivo, calculadoras);
+        
+        system("clear");
+    
+        printf(OUTPUT "\n <-- CALCULADORAS (EDITAR) --> \n");
+
+        if(strcmp(message, "") != 0){
+            printf(ERROR "\n %s ", message);
+        }
+
+        if(num_recursos == 0){
+            printf(ERROR "\n Não há CALCULADORAS!");
+        }
+
+        for(int i = 0; i < num_recursos; i++){
+    
+            printf(OUTPUT "\n (%02d) %03d %-8.8s - %s", (i + 1), calculadoras[i].id, calculadoras[i].modelo, calculadoras[i].marca);
+    
+        }
+    
+        printf(OUTPUT "\n\n ================================ ");
+    
+        printf("\n");
+
+        printf(SUCCESS "\n Digite 0 para RETORNAR! \n");
+    
+        printf(HELP "\n Insira a CALCULADORA a EDITAR >> ");
+        opcao = input();
+
+        if(opcao == 0){
+            free(calculadoras);
+            break;
+        }
+
+        if(opcao < 0 || opcao > (num_recursos)){
+            strcpy(message, "Insira uma OPÇÃO VÁLIDA!\n");
+        } else {
+
+            printf(HELP "\n Insira NOVO MODELO >> ");
+            inputString(calculadoras[opcao - 1].modelo, 8);
+
+            printf(HELP "\n Insira NOVA MARCA >> ");
+            inputString(calculadoras[opcao - 1].marca, 8);
+
+            salvarCalculadoras(arquivo, calculadoras, num_recursos);
+
+            free(calculadoras);
+        }   
+
+    } while(opcao != 0);
+
+}
+
+void editarFoneOuvido(){
+
+    int opcao = 0;
+
+    char arquivo[] = "src/bd/fones_ouvido.txt";
+    
+    // ========================================================
+    
+    char message[32] = "";
+    
+    do {
+
+        int num_recursos = numeroRecursos(arquivo);
+        
+        struct Fone_Ouvido *fones_ouvido = malloc(sizeof(struct Fone_Ouvido) * num_recursos);
+        
+        lerFonesOuvido(arquivo, fones_ouvido);
+        
+        system("clear");
+    
+        printf(OUTPUT "\n <-- FONES DE OUVIDO (EDITAR) --> \n");
+
+        if(strcmp(message, "") != 0){
+            printf(ERROR "\n %s ", message);
+        }
+
+        if(num_recursos == 0){
+            printf(ERROR "\n Não há FONES DE OUVIDO!");
+        }
+
+        for(int i = 0; i < num_recursos; i++){
+    
+            printf(OUTPUT "\n (%02d) %03d %-8.8s - %s", (i + 1), fones_ouvido[i].id, fones_ouvido[i].modelo, fones_ouvido[i].marca);
+    
+        }
+    
+        printf(OUTPUT "\n\n ================================ ");
+    
+        printf("\n");
+
+        printf(SUCCESS "\n Digite 0 para RETORNAR! \n");
+    
+        printf(HELP "\n Insira o FONE DE OUVIDO a EDITAR >> ");
+        opcao = input();
+
+        if(opcao == 0){
+            free(fones_ouvido);
+            break;
+        }
+
+        if(opcao < 0 || opcao > (num_recursos)){
+            strcpy(message, "Insira uma OPÇÃO VÁLIDA!\n");
+        } else {
+
+            printf(HELP "\n Insira NOVO MODELO >> ");
+            inputString(fones_ouvido[opcao - 1].modelo, 16);
+
+            printf(HELP "\n Insira NOVA MARCA >> ");
+            inputString(fones_ouvido[opcao - 1].marca, 16);
+
+            salvarFonesOuvido(arquivo, fones_ouvido, num_recursos);
+
+            free(fones_ouvido);
+        }   
+
+    } while(opcao != 0);
+
+}
+
+void editarSala(){
+
+    int opcao = 0;
+
+    char arquivo[] = "src/bd/salas.txt";
+    
+    // ========================================================
+    
+    char message[32] = "";
+    
+    do {
+
+        int num_recursos = numeroRecursos(arquivo);
+        
+        struct Sala *salas = malloc(sizeof(struct Sala) * num_recursos);
+        
+        lerSalas(arquivo, salas);
+        
+        system("clear");
+    
+        printf(OUTPUT "\n <-- SALAS (EDITAR) --> \n");
+
+        if(strcmp(message, "") != 0){
+            printf(ERROR "\n %s ", message);
+        }
+
+        if(num_recursos == 0){
+            printf(ERROR "\n Não há SALAS!");
+        }
+
+        for(int i = 0; i < num_recursos; i++){
+    
+            printf(OUTPUT "\n (%02d) %03d %-8.8s  %02d pessoas", (i + 1), salas[i].id, salas[i].sala, salas[i].max_pessoas);
+    
+        }
+    
+        printf(OUTPUT "\n\n ================================ ");
+    
+        printf("\n");
+
+        printf(SUCCESS "\n Digite 0 para RETORNAR! \n");
+    
+        printf(HELP "\n Insira a SALA a EDITAR >> ");
+        opcao = input();
+
+        if(opcao == 0){
+            free(salas);
+            break;
+        }
+
+        if(opcao < 0 || opcao > (num_recursos)){
+            strcpy(message, "Insira uma OPÇÃO VÁLIDA!\n");
+        } else {
+
+            printf(HELP "\n Insira NOVA SALA >> ");
+            inputString(salas[opcao - 1].sala, 8);
+
+            printf(HELP "\n Insira NOVA CAPACIDADE (pessoas) >> ");
+            salas[opcao - 1].max_pessoas = input();
+            
+            do {             
+                printf(ERROR " Insira NOVA CAPACIDADE (pessoas) >> ");
+                salas[opcao - 1].max_pessoas = input();
+            } while(salas[opcao - 1].max_pessoas <= 0);
+
+            salvarSalas(arquivo, salas, num_recursos);
+            
+            free(salas);
+        }   
+
+    } while(opcao != 0);
+
+}
+
+
 void editarRecurso(){
+
+    int opcao = -1;
+    char message[32] = "";
+
+    do {
+
+        system("clear");
+
+        printf(OUTPUT);
+    
+        printf("\n <--- EDITAR RECURSO ---> \n");
+        
+        if(strcmp(message, "") != 0){
+            printf(ERROR "\n %s ", message);
+        }
+
+        printf(OUTPUT);
+
+        printf("\n (1) LIVRO");
+        printf("\n (2) CALCULADORA");
+        printf("\n (3) FONE DE OUVIDO");
+        printf("\n (4) SALA");
+        printf("\n");
+        printf("\n (0) RETORNAR");
+    
+        printf(HELP "\n\n Insira uma opção >> ");
+        opcao = input();
+
+        switch (opcao){
+            case 0:
+                strcpy(message, "");
+                break;
+            
+            case 1:
+                editarLivro();
+                strcpy(message, "");
+                break;
+            
+            case 2:
+                editarCalculadora();
+                strcpy(message, "");
+                break;
+
+            case 3:
+                editarFoneOuvido();
+                strcpy(message, "");
+                break;
+
+            case 4:
+                editarSala();
+                strcpy(message, "");
+                break;
+            
+            default:
+                strcpy(message, "Insira uma opção válida!\n");
+                break;
+        }
+    
+    } while(opcao != 0);
 
 }
 
@@ -1589,7 +1933,7 @@ void interfaceInicialAdmin(){
                 break;
 
             case 3:
-                // editarRecurso();
+                editarRecurso();
                 strcpy(message, "");
                 break;
         

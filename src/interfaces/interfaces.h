@@ -51,6 +51,14 @@ void removerRecurso();
 
 // ============================================================
 
+void editarLivro();
+
+void editarCalculadora();
+
+void editarFoneOuvido();
+
+void editarSala();
+
 void editarRecurso();
 
 void interfaceInicialAdmin();
