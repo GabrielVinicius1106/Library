@@ -34,8 +34,6 @@ struct Sala {
     int disponivel;
 };
 
-// calculadora
-
 // Estrutura de Empréstimo
 struct Emprestimo {
     int id;
@@ -68,6 +66,5 @@ struct Data {
     int hora;
     int minuto;
 };
-
 
 #endif

@@ -1,74 +1,93 @@
 ### Sistema de Biblioteca
 
 - Gerenciador de Biblioteca, com funcionalidades de:
-    > Empréstimo
+    > Empréstimo de Recursos
+    > Reserva de Sala
+
     > Listagem de Itens Disponíveis
     > Listagem de Empréstimos
-    > Fitro de Itens (livros, tablets, fones de ouvido, calculadora)
-    > Controle de Devoluções
+    > Listagem de Reservas
+    > Listagem de Empréstimos / Reservas Atrasadas
+
+    > Persistência de dados em arquivos .txt
 
 ### Structs:
 
--   struct Usuario {
-        codigo,
-        nome,
-        email
-    }
-
 -   struct Livro {
-        codigo,
+        id,
         nome,
+        autor,
         categoria,
-        autor
+        disponivel
     }
 
 -   struct Calculadora {
-        codigo,
+        id,
         modelo,
-        marca
-    }
-
--   struct Tablet {
-        codigo,
-        modelo,
-        marca
+        marca,
+        disponivel
     }
 
 -   struct Fone_Ouvido {
-        codigo,
+        id,
         modelo,
-        marca
+        marca,
+        disponivel
+    }
+
+-   struct Sala {
+        id,
+        sala,
+        max_pessoas,
+        disponivel
     }
 
 -   struct Emprestimo {
-        codigo_emprestimo,
-        codigo_item,
-        nome_item,
-        codigo_usuario,
-        nome_usuario,
+        id,
+        id_recurso,
+        tipo_recurso,
+        nome_recurso,
+        data_emprestimo,
         data_devolução,
-        valor_multa **caso atrase**
+        concluido,
+        atrasado
+    }
+
+-   struct Reserva_Sala {
+        id,
+        sala,
+        data_reserva,
+        duracao,
+        qntd_pessoas,
+        concluido,
+        atrasado
+    }
+
+-   struct Data {
+        dia,
+        mes,
+        ano,
+        hora,
+        minuto
     }
 
 ### Funcionalidades:
 
 - **Administrador:**
     
-    > Cadastrar / Remover Livros, Calculadoras, Tablets, Fones de Ouvido
-
-    > Gerenciar Emprestimos
+    > Cadastrar, Remover e Editar Recursos (livros, calculadoras, fones de ouvido e salas)
 
 - **Usuário:**
 
-    > Listar Livros, Calculadora, Tablets, Fones de Ouvido
-
-    > Aplicar Filtros (categoria de livros, modelo de fone, etc.)
+    > Listar Livros, Calculadora, Fones de Ouvido
 
     > Realizar Emprestimos
 
-### Construção:
+    > Realizar Reservas
 
-- Para ***leitura e escrita*** no arquivo:
-    > Ler o arquivo inteiro e salvar na memória (alocação dinâmica)
-    > Realizar modificações
-    > Salvar novamente no arquivo quando necessário
+### Funcionalidades NÃO IMPLEMENTADAS:
+
+- Aplicar FILTRO na LISTAGEM de Recursos
+- Aplicar MULTA nos EMPRÉSTIMOS ATRASADOS
+- BLOQUEIO de Usuário com ATRASOS
+- Pagamento de MULTAS
