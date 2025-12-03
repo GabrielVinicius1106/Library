@@ -136,9 +136,9 @@ void listarCalculadoras(){
 
     for(int i = 0; i < num_calculadoras; i++){
             
-        int disponivel = (calculadoras + i)->disponivel;
+        int qntd = (calculadoras + i)->qntd;
 
-        if(disponivel){
+        if(qntd > 0){
             calculadoras_disponiveis += 1;
 
             vetor_disponiveis = realloc(vetor_disponiveis, sizeof(int) * calculadoras_disponiveis);
@@ -168,14 +168,14 @@ void listarCalculadoras(){
 
             for(int i = 0; i < num_calculadoras; i++){
 
-                int disponivel = (calculadoras + i)->disponivel;
+                int qntd = (calculadoras + i)->qntd;
 
-                if(disponivel){
+                if(qntd > 0){
                     printf(SUCCESS);
-                    printf("\n (%02d) %-8.8s - %s", (i + 1), (calculadoras + i)->modelo, (calculadoras + i)->marca);
+                    printf("\n (%02d) %-8.8s - %-8.8s | %02d disponíveis", (i + 1), (calculadoras + i)->modelo, (calculadoras + i)->marca, (calculadoras + i)->qntd);
                 } else {
                     printf(ERROR);
-                    printf("\n (--) %-8.8s - %s", (calculadoras + i)->modelo, (calculadoras + i)->marca);
+                    printf("\n (--) %-8.8s - %-8.8s | 00 disponíveis", (calculadoras + i)->modelo, (calculadoras + i)->marca);
                 }
             }
         }
@@ -239,9 +239,9 @@ void listarFonesOuvido(){
 
     for(int i = 0; i < num_fones; i++){
             
-        int disponivel = (fones_ouvido + i)->disponivel;
+        int qntd = (fones_ouvido + i)->qntd;
 
-        if(disponivel){
+        if(qntd > 0){
             fones_disponiveis += 1;
 
             vetor_disponiveis = realloc(vetor_disponiveis, sizeof(int) * fones_disponiveis);
@@ -271,14 +271,14 @@ void listarFonesOuvido(){
 
             for(int i = 0; i < num_fones; i++){
 
-                int disponivel = (fones_ouvido + i)->disponivel;
+                int qntd = (fones_ouvido + i)->qntd;
 
-                if(disponivel){
+                if(qntd > 0){
                     printf(SUCCESS);
-                    printf("\n (%02d) %-16.16s - %s", (i + 1), (fones_ouvido + i)->modelo, (fones_ouvido + i)->marca);
+                    printf("\n (%02d) %-16.16s - %-16.16s | %02d disponíveis", (i + 1), (fones_ouvido + i)->modelo, (fones_ouvido + i)->marca, (fones_ouvido + i)->qntd);
                 } else {
                     printf(ERROR);
-                    printf("\n (--) %-16.16s - %s", (fones_ouvido + i)->modelo, (fones_ouvido + i)->marca);
+                    printf("\n (--) %-16.16s - %-16.16s | 00 disponíveis", (fones_ouvido + i)->modelo, (fones_ouvido + i)->marca);
                 }
             }
         }
@@ -663,7 +663,7 @@ void emprestimoRecurso(int id_recurso, char nome_recurso[], char tipo_recurso[])
 
         for(int i = 0; i < num_calculadoras; i++){
             if((calculadoras + i)->id == id_recurso){
-                (calculadoras + i)->disponivel = 0;
+                (calculadoras + i)->qntd -= 1;
             }
         }
 
@@ -683,7 +683,7 @@ void emprestimoRecurso(int id_recurso, char nome_recurso[], char tipo_recurso[])
 
         for(int i = 0; i < num_fones; i++){
             if((fones_ouvido + i)->id == id_recurso){
-                (fones_ouvido + i)->disponivel = 0;
+                (fones_ouvido + i)->qntd -= 1;
             }
         }
 
@@ -1037,6 +1037,8 @@ void adicionarCalculadora(){
 
     char modelo[8], marca[8];
 
+    int qntd = 0;
+
     system("clear");
 
     printf(OUTPUT "\n <-- ADICIONAR CALCULADORA --> \n");
@@ -1047,13 +1049,21 @@ void adicionarCalculadora(){
     printf(HELP "\n Insira a MARCA >> ");
     inputString(marca, 8);
 
+    printf(HELP "\n Insira a QUANTIDADE >> ");
+    qntd = input();
+
+    while(qntd < 1){
+        printf(ERROR " Insira uma QUANTIDADE VÁLIDA >> ");
+        qntd = input(); 
+    }
+
     num_calculadoras++;
     calculadoras = realloc(calculadoras, sizeof(struct Calculadora) * num_calculadoras);
     
     calculadoras[num_calculadoras - 1].id = randomID();
     strcpy(calculadoras[num_calculadoras - 1].modelo, modelo);
     strcpy(calculadoras[num_calculadoras - 1].marca, marca);
-    calculadoras[num_calculadoras - 1].disponivel = 1;
+    calculadoras[num_calculadoras - 1].qntd = 1;
     
     salvarCalculadoras(arquivo, calculadoras, num_calculadoras);
 
@@ -1076,6 +1086,8 @@ void adicionarFoneOuvido(){
 
     char modelo[8], marca[8];
 
+    int qntd = 0;
+
     system("clear");
 
     printf(OUTPUT "\n <-- ADICIONAR FONE DE OUVIDO --> \n");
@@ -1086,13 +1098,21 @@ void adicionarFoneOuvido(){
     printf(HELP "\n Insira a MARCA >> ");
     inputString(marca, 8);
 
+    printf(HELP "\n Insira a QUANTIDADE >> ");
+    qntd = input();
+
+    while(qntd < 1){
+        printf(ERROR " Insira uma QUANTIDADE VÁLIDA >> ");
+        qntd = input(); 
+    }
+
     num_fones++;
     fones_ouvido = realloc(fones_ouvido, sizeof(struct Fone_Ouvido) * num_fones);
     
     fones_ouvido[num_fones - 1].id = randomID();
     strcpy(fones_ouvido[num_fones - 1].modelo, modelo);
     strcpy(fones_ouvido[num_fones - 1].marca, marca);
-    fones_ouvido[num_fones - 1].disponivel = 1;
+    fones_ouvido[num_fones - 1].qntd = 1;
     
     salvarFonesOuvido(arquivo, fones_ouvido, num_fones);
 
@@ -1241,7 +1261,7 @@ void removerLivro(){
 
         for(int i = 0; i < num_recursos; i++){
     
-            printf(OUTPUT "\n (%02d) %03d %-32.32s %-32.32s %s", (i + 1), livros[i].id, livros[i].nome, livros[i].autor, livros[i].categoria);
+            printf(OUTPUT "\n (%02d) %03d %-32.32s %-32.32s %-16.16s | %02d livros", (i + 1), livros[i].id, livros[i].nome, livros[i].autor, livros[i].categoria, livros[i].qntd);
     
         }
     
@@ -1263,20 +1283,35 @@ void removerLivro(){
             strcpy(message, "Insira uma OPÇÃO VÁLIDA!\n");
         } else {
 
-            struct Livro *temp = malloc(sizeof(struct Livro) * (num_recursos - 1));
-        
-            int ii = 0;
-            for(int i = 0; i < num_recursos; i++){
-                if(i != (opcao - 1)){
-                    temp[ii] = livros[i];   
-                    ii++;
+            printf(HELP "\n Insira a QUANTIDADE a EXCLUIR >> ");
+            int qntd = input();
+
+            while(qntd < 1){
+                printf(ERROR " Insira uma QUANTIDADE VÁLIDA >> ");
+                qntd = input();
+            }
+
+            if(qntd >= livros[opcao - 1].qntd){
+                struct Livro *temp = malloc(sizeof(struct Livro) * (num_recursos - 1));
+                
+                int ii = 0;
+                for(int i = 0; i < num_recursos; i++){
+                    if(i != (opcao - 1)){
+                        temp[ii] = livros[i];   
+                        ii++;
+                    }
                 }
+                
+                num_recursos--;
+                salvarLivros(arquivo, temp, num_recursos);
+            
+                free(temp);
+                
+            } else {
+                livros[opcao - 1].qntd -= qntd;
+                salvarLivros(arquivo, livros, num_recursos);
             }
             
-            num_recursos--;
-            salvarLivros(arquivo, temp, num_recursos);
-        
-            free(temp);
             free(livros);
         }   
 
@@ -1315,7 +1350,7 @@ void removerCalculadora(){
 
         for(int i = 0; i < num_recursos; i++){
     
-            printf(OUTPUT "\n (%02d) %03d %-8.8s - %s", (i + 1), calculadoras[i].id, calculadoras[i].modelo, calculadoras[i].marca);
+            printf(OUTPUT "\n (%02d) %03d %-8.8s - %-8.8s | %02d calculadoras", (i + 1), calculadoras[i].id, calculadoras[i].modelo, calculadoras[i].marca, calculadoras[i].qntd);
     
         }
     
@@ -1337,20 +1372,35 @@ void removerCalculadora(){
             strcpy(message, "Insira uma OPÇÃO VÁLIDA!\n");
         } else {
 
-            struct Calculadora *temp = malloc(sizeof(struct Calculadora) * (num_recursos - 1));
-        
-            int ii = 0;
-            for(int i = 0; i < num_recursos; i++){
-                if(i != (opcao - 1)){
-                    temp[ii] = calculadoras[i];   
-                    ii++;
+            printf(HELP "\n Insira a QUANTIDADE a EXCLUIR >> ");
+            int qntd = input();
+
+            while(qntd < 1){
+                printf(ERROR " Insira uma QUANTIDADE VÁLIDA >> ");
+                qntd = input();
+            }
+
+            if(qntd >= calculadoras[opcao - 1].qntd){
+                struct Calculadora *temp = malloc(sizeof(struct Calculadora) * (num_recursos - 1));
+            
+                int ii = 0;
+                for(int i = 0; i < num_recursos; i++){
+                    if(i != (opcao - 1)){
+                        temp[ii] = calculadoras[i];   
+                        ii++;
+                    }
                 }
+                
+                num_recursos--;
+                salvarCalculadoras(arquivo, temp, num_recursos);
+            
+                free(temp);
+
+            } else {
+                calculadoras[opcao - 1].qntd -= qntd;
+                salvarCalculadoras(arquivo, calculadoras, num_recursos);
             }
             
-            num_recursos--;
-            salvarCalculadoras(arquivo, temp, num_recursos);
-        
-            free(temp);
             free(calculadoras);
         }   
 
@@ -1389,7 +1439,7 @@ void removerFoneOuvido(){
 
         for(int i = 0; i < num_recursos; i++){
     
-            printf(OUTPUT "\n (%02d) %03d %-8.8s - %s", (i + 1), fones_ouvido[i].id, fones_ouvido[i].modelo, fones_ouvido[i].marca);
+            printf(OUTPUT "\n (%02d) %03d %-8.8s - %-16.16s | %02d fones de ouvido", (i + 1), fones_ouvido[i].id, fones_ouvido[i].modelo, fones_ouvido[i].marca, fones_ouvido[i].qntd);
     
         }
     
@@ -1411,21 +1461,38 @@ void removerFoneOuvido(){
             strcpy(message, "Insira uma OPÇÃO VÁLIDA!\n");
         } else {
 
-            struct Fone_Ouvido *temp = malloc(sizeof(struct Fone_Ouvido) * (num_recursos - 1));
-        
-            int ii = 0;
-            for(int i = 0; i < num_recursos; i++){
-                if(i != (opcao - 1)){
-                    temp[ii] = fones_ouvido[i];   
-                    ii++;
+            printf(HELP "\n Insira a QUANTIDADE a EXCLUIR >> ");
+            int qntd = input();
+
+            while(qntd < 1){
+                printf(ERROR " Insira uma QUANTIDADE VÁLIDA >> ");
+                qntd = input();
+            }   
+
+            if(qntd >= fones_ouvido[opcao - 1].qntd){
+                
+                struct Fone_Ouvido *temp = malloc(sizeof(struct Fone_Ouvido) * (num_recursos - 1));
+            
+                int ii = 0;
+                for(int i = 0; i < num_recursos; i++){
+                    if(i != (opcao - 1)){
+                        temp[ii] = fones_ouvido[i];   
+                        ii++;
+                    }
                 }
+                
+                num_recursos--;
+                salvarFonesOuvido(arquivo, temp, num_recursos);
+            
+                free(temp);
+                
+            } else {
+                fones_ouvido[opcao - 1].qntd -= qntd;
+                salvarFonesOuvido(arquivo, fones_ouvido, num_recursos);
             }
             
-            num_recursos--;
-            salvarFonesOuvido(arquivo, temp, num_recursos);
-        
-            free(temp);
             free(fones_ouvido);
+
         }   
 
     } while(opcao != 0);
@@ -1601,7 +1668,7 @@ void editarLivro(){
 
         for(int i = 0; i < num_recursos; i++){
     
-            printf(OUTPUT "\n (%02d) %03d %-32.32s %-32.32s %s", (i + 1), livros[i].id, livros[i].nome, livros[i].autor, livros[i].categoria);
+            printf(OUTPUT "\n (%02d) %03d %-32.32s %-32.32s %-16.16s | %02d livros", (i + 1), livros[i].id, livros[i].nome, livros[i].autor, livros[i].categoria, livros[i].qntd);
     
         }
     
@@ -1631,6 +1698,14 @@ void editarLivro(){
 
             printf("\n Insira NOVA CATEGORIA >> ");
             inputString(livros[opcao - 1].categoria, 16);
+
+            printf("\n Insira a QUANTIDADE >> ");
+            livros[opcao - 1].qntd = input();
+
+            while(livros[opcao - 1].qntd < 1){
+                printf(ERROR " Insira uma QUANTIDADE VÁLIDA >> ");
+                livros[opcao - 1].qntd = input();
+            }
 
             salvarLivros(arquivo, livros, num_recursos);
 
@@ -1701,6 +1776,14 @@ void editarCalculadora(){
             printf(HELP "\n Insira NOVA MARCA >> ");
             inputString(calculadoras[opcao - 1].marca, 8);
 
+            printf("\n Insira a QUANTIDADE >> ");
+            calculadoras[opcao - 1].qntd = input();
+
+            while(calculadoras[opcao - 1].qntd < 1){
+                printf(ERROR " Insira uma QUANTIDADE VÁLIDA >> ");
+                calculadoras[opcao - 1].qntd = input();
+            }
+
             salvarCalculadoras(arquivo, calculadoras, num_recursos);
 
             free(calculadoras);
@@ -1769,6 +1852,14 @@ void editarFoneOuvido(){
 
             printf(HELP "\n Insira NOVA MARCA >> ");
             inputString(fones_ouvido[opcao - 1].marca, 16);
+
+            printf("\n Insira a QUANTIDADE >> ");
+            fones_ouvido[opcao - 1].qntd = input();
+
+            while(fones_ouvido[opcao - 1].qntd < 1){
+                printf(ERROR " Insira uma QUANTIDADE VÁLIDA >> ");
+                fones_ouvido[opcao - 1].qntd = input();
+            }
 
             salvarFonesOuvido(arquivo, fones_ouvido, num_recursos);
 

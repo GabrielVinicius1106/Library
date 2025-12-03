@@ -81,7 +81,7 @@ void lerCalculadoras(char arquivo[], struct Calculadora *calculadoras){
         int id;
         char modelo[8];
         char marca[8];
-        int disponivel;
+        int qntd;
         
         rewind(fp);
         for(int i = 0; i < num_calculadoras; i++){
@@ -89,12 +89,12 @@ void lerCalculadoras(char arquivo[], struct Calculadora *calculadoras){
             fscanf(fp, " %d;", &id);
             fscanf(fp, " %[^;];", modelo);
             fscanf(fp, " %[^;];", marca);
-            fscanf(fp, " %d;\n", &disponivel);
+            fscanf(fp, " %d;\n", &qntd);
 
             (calculadoras + i)->id = id;
             strcpy((calculadoras + i)->modelo, modelo);
             strcpy((calculadoras + i)->marca, marca);
-            (calculadoras + i)->disponivel = disponivel;
+            (calculadoras + i)->qntd = qntd;
         }
     }
 
@@ -114,7 +114,7 @@ void lerFonesOuvido(char arquivo[], struct Fone_Ouvido *fones_ouvido){
         int id;
         char modelo[16];
         char marca[16];
-        int disponivel;
+        int qntd;
 
         rewind(fp);
         for(int i = 0; i < num_fones; i++){
@@ -122,12 +122,12 @@ void lerFonesOuvido(char arquivo[], struct Fone_Ouvido *fones_ouvido){
             fscanf(fp, " %d;", &id);
             fscanf(fp, " %[^;];", modelo);
             fscanf(fp, " %[^;];", marca);
-            fscanf(fp, " %d;\n", &disponivel);
+            fscanf(fp, " %d;\n", &qntd);
 
             (fones_ouvido + i)->id = id;
             strcpy((fones_ouvido + i)->modelo, modelo);
             strcpy((fones_ouvido + i)->marca, marca);
-            (fones_ouvido + i)->disponivel = disponivel;
+            (fones_ouvido + i)->qntd = qntd;
         }
     }
 
@@ -289,7 +289,7 @@ void salvarCalculadoras(char arquivo[], struct Calculadora *calculadoras, int nu
     } else {
 
         for(int i = 0; i < num_calculadoras; i++){
-            fprintf(fp, "%d;%s;%s;%d;\n", (calculadoras + i)->id, (calculadoras + i)->modelo, (calculadoras + i)->marca, (calculadoras + i)->disponivel);
+            fprintf(fp, "%d;%s;%s;%d;\n", (calculadoras + i)->id, (calculadoras + i)->modelo, (calculadoras + i)->marca, (calculadoras + i)->qntd);
             fflush(fp);
         }
 
@@ -311,7 +311,7 @@ void salvarFonesOuvido(char arquivo[], struct Fone_Ouvido *fones_ouvido, int num
     } else {
 
         for(int i = 0; i < num_fones; i++){
-            fprintf(fp, "%d;%s;%s;%d;\n", (fones_ouvido + i)->id, (fones_ouvido + i)->modelo, (fones_ouvido + i)->marca, (fones_ouvido + i)->disponivel);
+            fprintf(fp, "%d;%s;%s;%d;\n", (fones_ouvido + i)->id, (fones_ouvido + i)->modelo, (fones_ouvido + i)->marca, (fones_ouvido + i)->qntd);
             fflush(fp);
         }
 
@@ -396,7 +396,7 @@ void concluirEmprestimo(char tipo_recurso[], int id_recurso){
 
         for(int i = 0; i < num_calculadoras; i++){
             if(calculadoras[i].id == id_recurso){
-                calculadoras[i].disponivel = 1;
+                calculadoras[i].qntd += 1;
             }
         }
 
@@ -415,7 +415,7 @@ void concluirEmprestimo(char tipo_recurso[], int id_recurso){
 
         for(int i = 0; i < num_fones; i++){
             if(fones_ouvido[i].id == id_recurso){
-                fones_ouvido[i].disponivel = 1;
+                fones_ouvido[i].qntd += 1;
             }
         }
 

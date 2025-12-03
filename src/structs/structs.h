@@ -17,7 +17,7 @@ struct Calculadora {
     int id;
     char modelo[8];
     char marca[8];
-    int disponivel;
+    int qntd;
 };
 
 // Estrutura Fone de Ouvido
@@ -25,7 +25,7 @@ struct Fone_Ouvido {
     int id;
     char modelo[16];
     char marca[16];
-    int disponivel;
+    int qntd;
 };
 
 // Estrutura Sala de Estudos
