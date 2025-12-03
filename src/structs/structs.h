@@ -7,7 +7,9 @@ struct Livro {
     char nome[32];
     char autor[32];
     char categoria[16];
-    int disponivel;
+    int qntd;
+    int ano;
+    int volume;
 };
 
 // Estrutura Calculadora

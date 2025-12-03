@@ -5,7 +5,7 @@ int input();
 
 void inputString(char string[], int tamanho);
 
-int inputData(int *dia, int *mes, char message[]);
+int inputData(int *dia, int *mes, int *ano, char message[]);
 
 int inputHorario(int *horas, int *minutos, char message[]);
 

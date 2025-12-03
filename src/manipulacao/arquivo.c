@@ -40,7 +40,9 @@ void lerLivros(char arquivo[], struct Livro *livros){
         char nome[32];
         char autor[32];
         char categoria[16];
-        int disponivel;
+        int qntd;
+        int ano;
+        int volume;
         
         rewind(fp);
         for(int i = 0; i < num_livros; i++){
@@ -49,13 +51,17 @@ void lerLivros(char arquivo[], struct Livro *livros){
             fscanf(fp, " %[^;];", nome);
             fscanf(fp, " %[^;];", autor);
             fscanf(fp, " %[^;];", categoria);
-            fscanf(fp, " %d;\n", &disponivel);
+            fscanf(fp, " %d;", &qntd);
+            fscanf(fp, " %d;", &ano);
+            fscanf(fp, " %d;\n", &volume);
 
             (livros + i)->id = id;
             strcpy((livros + i)->nome, nome);
             strcpy((livros + i)->autor, autor);
             strcpy((livros + i)->categoria, categoria);
-            (livros + i)->disponivel = disponivel;
+            (livros + i)->qntd = qntd;
+            (livros + i)->ano = ano;
+            (livros + i)->volume = volume;
         }
     }
 
@@ -261,7 +267,7 @@ void salvarLivros(char arquivo[], struct Livro *livros, int num_livros){
     } else {
 
         for(int i = 0; i < num_livros; i++){
-            fprintf(fp, "%d;%s;%s;%s;%d;\n", (livros + i)->id, (livros + i)->nome, (livros + i)->autor, (livros + i)->categoria, (livros + i)->disponivel);
+            fprintf(fp, "%d;%s;%s;%s;%d;%d;%d;\n", (livros + i)->id, (livros + i)->nome, (livros + i)->autor, (livros + i)->categoria, (livros + i)->qntd, (livros + i)->ano, (livros + i)->volume);
             fflush(fp);
         }
 
@@ -371,7 +377,7 @@ void concluirEmprestimo(char tipo_recurso[], int id_recurso){
 
         for(int i = 0; i < num_livros; i++){
             if(livros[i].id == id_recurso){
-                livros[i].disponivel = 1;
+                livros[i].qntd += 1;
             }
         }
 

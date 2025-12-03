@@ -29,24 +29,53 @@ struct Data dataAtual(){
 
 struct Data dataDevolucao(){
     // Cada empréstimo terá uma duração de 7 dias
-    // LIMITAÇÃO: Todos os meses possuem 31 DIAS
 
-    struct Data data_devolucao = dataAtual();
+    int meses[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    
+    struct Data data_atual = dataAtual();
+    
+    int num_dias = 0;
 
-    data_devolucao.dia = data_devolucao.dia + 7;
+    // Fevereiro
+    if(data_atual.mes == 2){
+        if(data_atual.ano % 4 == 0){
+            if(data_atual.ano % 100 == 0){
+                if(data_atual.ano % 400 == 0){
+                    num_dias = 29;
+                } else {
+                    num_dias = 28;
+                }
+            } else {
+                num_dias = 29;
+            }
+        } else {
+            num_dias = 28;
+        }
+    } else {
 
-    if(data_devolucao.dia > 31){
-        data_devolucao.dia = data_devolucao.dia - 31;
-        data_devolucao.mes += 1;
+        // Outros Meses
+        num_dias = meses[data_atual.mes - 1];
+    }   
 
-        if (data_devolucao.mes > 12){
-            data_devolucao.mes = 1;
-            data_devolucao.ano += 1;
+    int dia_devolucao = data_atual.dia + 7;
+    int mes_devolucao = data_atual.mes; 
+    int ano_devolucao = data_atual.ano; 
+
+    if(dia_devolucao > num_dias){
+        dia_devolucao = dia_devolucao - num_dias;
+        mes_devolucao++;
+
+        if(mes_devolucao > 12){
+            mes_devolucao = 1;
+            ano_devolucao += 1;
         }
     }
 
-    return data_devolucao;
+    data_atual.dia = dia_devolucao;
+    data_atual.mes = mes_devolucao;
+    data_atual.ano = ano_devolucao;
 
+    return data_atual;
 
 }
 
@@ -55,14 +84,77 @@ int emprestimoAtrasado(struct Emprestimo emprestimo){
     struct Data data_atual = dataAtual();
     struct Data data_emprestimo;
     struct Data data_devolucao;
-
+    
     sscanf(emprestimo.data_emprestimo, "%d/%d/%d %d:%d", &data_emprestimo.dia, &data_emprestimo.mes, &data_emprestimo.ano, &data_emprestimo.hora, &data_emprestimo.minuto);
     sscanf(emprestimo.data_devolucao, "%d/%d/%d %d:%d", &data_devolucao.dia, &data_devolucao.mes, &data_devolucao.ano, &data_devolucao.hora, &data_devolucao.minuto);
-        
+
+    int meses[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+    int num_dias_atual = 0;
+    int num_dias_emprestimo = 0;
+    int num_dias_devolucao = 0;
+
+    // Numero de Dias MÊS ATUAL
+    if(data_atual.mes == 2){
+        if(data_atual.ano % 4 == 0){
+            if(data_atual.ano % 100 == 0){
+                if(data_atual.ano % 400 == 0){
+                    num_dias_atual = 29;
+                } else {
+                    num_dias_atual = 28;
+                }
+            } else {
+                num_dias_atual = 29;
+            }
+        } else {
+            num_dias_atual = 28;
+        }
+    } else {
+        num_dias_atual = meses[data_atual.mes - 1];
+    }
+
+    // Numero de Dias MÊS DE EMPRÉSTIMO 
+    if(data_emprestimo.mes == 2){
+        if(data_emprestimo.ano % 4 == 0){
+            if(data_emprestimo.ano % 100 == 0){
+                if(data_emprestimo.ano % 400 == 0){
+                    num_dias_emprestimo = 29;
+                } else {
+                    num_dias_emprestimo = 28;
+                }
+            } else {
+                num_dias_emprestimo = 29;
+            }
+        } else {
+            num_dias_emprestimo = 28;
+        }
+    } else {
+        num_dias_emprestimo = meses[data_emprestimo.mes - 1];
+    }
+
+    // Numero de Dias MÊS DE DEVOLUÇÃO 
+    if(data_devolucao.mes == 2){
+        if(data_devolucao.ano % 4 == 0){
+            if(data_devolucao.ano % 100 == 0){
+                if(data_devolucao.ano % 400 == 0){
+                    num_dias_devolucao = 29;
+                } else {
+                    num_dias_devolucao = 28;
+                }
+            } else {
+                num_dias_devolucao = 29;
+            }
+        } else {
+            num_dias_devolucao = 28;
+        }
+    } else {
+        num_dias_devolucao = meses[data_devolucao.mes - 1];
+    }
+
     // Calcular a QUANTIDADE de dias entre DATA_DEVOLUCAO - DATA_EMPRESTIMO | DATA_ATUAL - DATA_EMPRESTIMO
 
-    int emprestimo_devolucao = (((data_devolucao.ano - 2000) * 365) + (data_devolucao.mes * 31) + data_devolucao.dia) - (((data_emprestimo.ano - 2000) * 365) + (data_emprestimo.mes * 31) + data_emprestimo.dia);
-    int emprestimo_hoje = (((data_atual.ano - 2000) * 365) + (data_atual.mes * 31) + data_atual.dia) - (((data_emprestimo.ano - 2000) * 365) + (data_emprestimo.mes * 31) + data_emprestimo.dia);
+    int emprestimo_devolucao = (((data_devolucao.ano - 2000) * 365) + (data_devolucao.mes * num_dias_devolucao) + data_devolucao.dia) - (((data_emprestimo.ano - 2000) * 365) + (data_emprestimo.mes * num_dias_emprestimo) + data_emprestimo.dia);
+    int emprestimo_hoje = (((data_atual.ano - 2000) * 365) + (data_atual.mes * num_dias_atual) + data_atual.dia) - (((data_emprestimo.ano - 2000) * 365) + (data_emprestimo.mes * num_dias_emprestimo) + data_emprestimo.dia);
     
     if(emprestimo_devolucao < emprestimo_hoje){
         return 1;

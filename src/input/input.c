@@ -32,39 +32,79 @@ void inputString(char string[], int tamanho){
 
 }
 
-int inputData(int *dia, int *mes, char message[]){
+int inputData(int *dia, int *mes, int *ano, char message[]){
     
     // Resolver VALIDAÇÃO de DATAS (inserção de datas passadas)
+
+    int meses[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+    // 1 - Janeiro
+    // 2 - Fevereiro
+    // 3 - Março
+    // 4 - Abril
+    // 5 - Maio
+    // 6 - Junho
+    // 7 - Julho
+    // 8 - Agosto
+    // 9 - Setembro
+    // 10 - Outubro
+    // 11 - Novembro
+    // 12 - Dezembro
 
     struct Data data_atual = dataAtual();
 
     char buffer[16]; 
       
-    printf(HELP "\n Insira a DATA da RESERVA (dd/mm) >> ");
+    printf(HELP "\n Insira a DATA da RESERVA (dd/mm/yyyy) >> ");
 
     fgets(buffer, sizeof(buffer), stdin);
-    int num_leituras = sscanf(buffer, "%d/%d", dia, mes);
+    int num_leituras = sscanf(buffer, "%d/%d/%d", dia, mes, ano);
 
-    if(*mes < data_atual.mes){
-        sprintf(message, "Insira uma data válida! ( > %d/%d)\n", data_atual.dia, data_atual.mes);
+    // Implementar validação de mês e ano bisexto  
+    
+    int num_dias = 0;
+
+    if(*ano < data_atual.ano){
+        sprintf(message, "Insira um ano válido!\n");
         return 0;
     }
 
-    if(*mes == data_atual.mes && *dia <= data_atual.dia){
-        sprintf(message, "Insira uma data válida! ( > %d/%d)\n", data_atual.dia, data_atual.mes);
-        return 0;
-    }
-
-    if(num_leituras != 2){
-        strcpy(message, "Insira o formato válido (dd/mm)!\n");
-        return 0;
-    } else if((*dia < 1) || (*dia > 31) || (*mes < 1) || (*mes > 12)){
-        strcpy(message, "Insira uma data válida!\n");
+    if(*mes < 1 || *mes > 12){        
+        sprintf(message, "Insira um mês válido!\n");
         return 0;
     } else {
-        strcpy(message, "");
+
+        // Fevereiro
+        if(*mes == 2){
+            if(*ano % 4 == 0){
+                if(*ano % 100 == 0){
+                    if(*ano % 400 == 0){
+                        num_dias = 29;
+                    } else {
+                        num_dias = 28;
+                    }
+                } else {
+                    num_dias = 29;
+                }
+            } else {
+                num_dias = 28;
+            }
+        } else {
+            num_dias = meses[*mes - 1];
+        }   
+    }
+
+    if(*dia < 1 || *dia > num_dias){
+        sprintf(message, "Insira um dia válido!\n");
+        return 0;
+    }
+
+    if(num_leituras == 3){
         return 1;
-    }   
+    }
+
+    return 0;
+
 }
 
 int inputHorario(int *horas, int *minutos, char message[]){

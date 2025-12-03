@@ -31,9 +31,9 @@ void listarLivros(){
  
     for(int i = 0; i < num_livros; i++){
             
-        int disponivel = (livros + i)->disponivel;
+        int qntd = (livros + i)->qntd;
 
-        if(disponivel){
+        if(qntd > 0){
             livros_disponiveis += 1;
 
             vetor_disponiveis = realloc(vetor_disponiveis, sizeof(int) * livros_disponiveis);
@@ -64,14 +64,14 @@ void listarLivros(){
 
             for(int i = 0; i < num_livros; i++){
 
-                int disponivel = (livros + i)->disponivel;
+                int qntd = (livros + i)->qntd;
 
-                if(disponivel){
+                if(qntd){
                     printf(SUCCESS);
-                    printf("\n (%02d) %-32.32s - %s", (i + 1), (livros + i)->nome, (livros + i)->autor);
+                    printf("\n (%02d) %-32.32s - %-24.24s    %04d    %02dº Volume | %02d disponíveis", (i + 1), (livros + i)->nome, (livros + i)->autor, (livros + i)->ano, (livros + i)->volume, (livros + i)->qntd);
                 } else {
                     printf(ERROR);
-                    printf("\n (--) %-32.32s - %s", (livros + i)->nome, (livros + i)->autor);
+                    printf("\n (--) %-32.32s - %-24.24s    %04d    %02dº Volume | 00 disponíveis", (livros + i)->nome, (livros + i)->autor, (livros + i)->ano, (livros + i)->volume);
                 }
 
             }
@@ -643,7 +643,7 @@ void emprestimoRecurso(int id_recurso, char nome_recurso[], char tipo_recurso[])
 
         for(int i = 0; i < num_livros; i++){
             if((livros + i)->id == id_recurso){
-                (livros + i)->disponivel = 0;
+                (livros + i)->qntd -= 1;
             }
         }
 
@@ -701,14 +701,13 @@ void emprestimoRecurso(int id_recurso, char nome_recurso[], char tipo_recurso[])
 void reservaSala(int id_sala, char sala[], int max_pessoas){
     // Criação de Reserva de Sala
 
-    struct Data data_atual = dataAtual(); 
     struct Reserva_Sala nova_reserva;
 
     char arquivo_reservas[] = "src/bd/reservas.txt"; 
     
     // ===================================================
     
-    int horas, minutos, dia, mes, horario_valido = 0, data_valida = 0, qntd_pessoas = 0, duracao = 0;
+    int horas, minutos, dia, mes, ano, horario_valido = 0, data_valida = 0, qntd_pessoas = 0, duracao = 0;
     
     char message[64] = "";
                
@@ -721,7 +720,7 @@ void reservaSala(int id_sala, char sala[], int max_pessoas){
             printf(ERROR "\n %s ", message);
         }
 
-        data_valida = inputData(&dia, &mes, message);
+        data_valida = inputData(&dia, &mes, &ano, message);
     }
     
     strcpy(message, "");
@@ -781,7 +780,7 @@ void reservaSala(int id_sala, char sala[], int max_pessoas){
     // Nova Reserva de Sala
     nova_reserva.id = randomID();
     strcpy(nova_reserva.sala, sala);
-    sprintf(nova_reserva.data_reserva, "%02d/%02d/%02d %02d:%02d", dia, mes, data_atual.ano, horas, minutos);
+    sprintf(nova_reserva.data_reserva, "%02d/%02d/%02d %02d:%02d", dia, mes, ano, horas, minutos);
     nova_reserva.duracao = duracao;
     nova_reserva.qntd_pessoas = qntd_pessoas;
     nova_reserva.concluido = 0;
@@ -954,6 +953,8 @@ void interfaceInicialUsuario(){
 void adicionarLivro(){
 
     char arquivo[] = "src/bd/livros.txt";
+
+    struct Data data_atual = dataAtual();
     
     int num_livros = numeroRecursos(arquivo);
     
@@ -964,6 +965,8 @@ void adicionarLivro(){
     // ========================================================
 
     char nome_livro[32], autor[32], categoria[16];
+
+    int qntd = 0, ano = 0, volume = 0;
 
     system("clear");
 
@@ -978,6 +981,30 @@ void adicionarLivro(){
     printf(HELP "\n Insira a CATEGORIA >> ");
     inputString(categoria, 16);
 
+    printf(HELP "\n Insira a QUANTIDADE >> ");
+    qntd = input();
+
+    while(qntd < 1){
+        printf(ERROR " Insira uma QUANTIDADE VÁLIDA >> ");
+        qntd = input(); 
+    }
+
+    printf(HELP "\n Insira o ANO >> ");
+    ano = input();
+
+    while(ano < 1400 || ano > data_atual.ano){
+        printf(ERROR " Insira um ANO VÁLIDO >> ");
+        ano = input(); 
+    }
+
+    printf(HELP "\n Insira o VOLUME >> ");
+    volume = input();
+
+    while(volume < 1){
+        printf(ERROR " Insira um VOLUME VÁLIDO >> ");
+        volume = input(); 
+    }
+
     num_livros++;
     livros = realloc(livros, sizeof(struct Livro) * num_livros);
     
@@ -985,7 +1012,9 @@ void adicionarLivro(){
     strcpy(livros[num_livros - 1].nome, nome_livro);
     strcpy(livros[num_livros - 1].autor, autor);
     strcpy(livros[num_livros - 1].categoria, categoria);
-    livros[num_livros - 1].disponivel = 1;
+    livros[num_livros - 1].qntd = qntd;
+    livros[num_livros - 1].ano = ano;
+    livros[num_livros - 1].volume = volume;
     
     salvarLivros(arquivo, livros, num_livros);
 
