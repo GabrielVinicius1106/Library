@@ -2,3 +2,4 @@
 2;QCY T20;QCY;2;
 3;JBL Wave Flex;JBL;2;
 4;Zeus PRO;Redragonn;4;
+30;qcy;qcy;1;

@@ -69,6 +69,11 @@ int inputData(int *dia, int *mes, int *ano, char message[]){
         return 0;
     }
 
+    if(*ano == data_atual.ano && *mes < data_atual.mes){
+        sprintf(message, "Insira um mês válido!\n");
+        return 0;
+    }
+
     if(*mes < 1 || *mes > 12){        
         sprintf(message, "Insira um mês válido!\n");
         return 0;
@@ -96,6 +101,16 @@ int inputData(int *dia, int *mes, int *ano, char message[]){
 
     if(*dia < 1 || *dia > num_dias){
         sprintf(message, "Insira um dia válido!\n");
+        return 0;
+    }
+    
+    if(*ano == data_atual.ano && *mes == data_atual.mes && *dia <= data_atual.dia){
+        sprintf(message, "Insira um dia válido!\n");
+        return 0;
+    }
+    
+    if(*ano == data_atual.ano && *mes < data_atual.mes && *dia == data_atual.dia){
+        sprintf(message, "Insira um mês válido!\n");
         return 0;
     }
 

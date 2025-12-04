@@ -5,3 +5,5 @@
 6;O Homem Mais Rico da Babilonia;George S. Clason;Financas;2;1970;1;
 67;O Senhor dos Aneis;JRR Tolkien;Fantasia;4;2002;1;
 18;Um Curso de Calculo;Guidorizzi;Superior;5;2020;5;
+45;Novo Livro;Novo Autor;Categoria;1;2025;1;
+48;2001;arthur clarke;ficcao cientifi;2;1968;2;
