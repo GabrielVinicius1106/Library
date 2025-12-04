@@ -1,2 +1,2 @@
-1;Cas-54;Casio;1;
-2;HP-25;HP;1;
+1;Cas-54;Casio;3;
+2;HP-25;HP;3;
